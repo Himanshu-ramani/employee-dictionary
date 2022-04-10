@@ -21,10 +21,10 @@ const UplaodModal = ({
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
 
-  const capture = React.useCallback(() => {
+  const capture =() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImage(imageSrc);
-  });
+  };
   const [viewInput, setviewInput] = useState(false);
   const [take, setTake] = useState(false);
   const [hideOption, setHideOption] = useState(false);
@@ -39,10 +39,11 @@ const UplaodModal = ({
     if (modalDetail === "adharCard") {
       setHeading("Your Adhar Card");
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDetail]);
 useEffect(() => {
 setFormValue(pre =>({...pre,[modalDetail]:image }))
-console.log(image);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [image])
 
   const viewGallary = () => {
@@ -77,7 +78,6 @@ console.log(image);
     const { files } = e.target;
     console.log(files[0]);
     const base64 = await toBase64(files[0]);
-    // console.log(base64);
     setFormValue(pre =>({...pre ,[modalDetail]:base64}))
   };
  
@@ -117,7 +117,7 @@ console.log(image);
           <div>
             <div>
               <img
-                className="modal_profile_img"
+                className="modal_profile_img" alt="upload_image"
                 src={
                   formValue[modalDetail] === ""
                     ? profile

@@ -164,7 +164,17 @@ const Form = () => {
   const update = async (e) => {
     e.preventDefault();
     const userDoc = doc(db, "employee", id);
+    try {
+      setloading(true)
     await updateDoc(userDoc, formValue);
+      setloading(false)
+      toast.success("updated Succesfully")
+      setTimeout(() => {
+        navigate("/Employee-list");
+      }, 5000);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //view modal
@@ -189,7 +199,7 @@ const Form = () => {
 
   return (
     <>
-      <form onSubmit={formSubmitHandler} className="Form">
+       <form onSubmit={formSubmitHandler} className="Form">
         {loading && spinner}
 
         <div>
@@ -435,7 +445,7 @@ const Form = () => {
             >
               Upload Photo
             </button>
-            {formValue.photo === '' ? <p>Upload your Photo</p> :<></>}
+            {isValid.photo && formValue.photo === '' ? <p>Upload your Photo</p> :<></>}
            
           </div>
           <div>
@@ -446,7 +456,7 @@ const Form = () => {
             >
               Upload Adhar Card{" "}
             </button>
-            {formValue.adharCard === '' ? <p>Upload your adharCard</p> :<></>}
+            {isValid.adharCard && formValue.adharCard === '' ? <p>Upload your adharCard</p> :<></>}
           </div>
           <div>
             <button
@@ -456,7 +466,7 @@ const Form = () => {
             >
               Upload Pan Card
             </button>
-            {formValue.panCard === '' ? <p>Upload your PanCard</p> :<></>}
+            {isValid.panCard &&formValue.panCard === '' ? <p>Upload your PanCard</p> :<></>}
           </div>
           {viewModal && (
             <UplaodModal

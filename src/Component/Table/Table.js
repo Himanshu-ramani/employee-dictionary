@@ -42,8 +42,10 @@ const Tables = () => {
       } 
     }
   };
+  const [result, setResult] = useState('')
   useEffect(() => {
     getEmployee();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (state !== "") {
@@ -54,9 +56,12 @@ const Tables = () => {
           .includes(state.toLowerCase());
       });
       setEmployees(newData);
+      setResult(newData.length !== 0 ? "" : "No result Found")
     } else {
       setEmployees(allData);
+      setResult('')
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   //spiner
   const spinner = <div className="spinner"></div>;
@@ -91,10 +96,10 @@ const Tables = () => {
           </tr>
         </thead>
         <tbody>
-          {currentEmployees.map((employe) => (
+          {!loading && currentEmployees.map((employe) => (
             <tr key={employe.id}>
               <td data-label="First Name" className="profile_row">
-                <img className="profile" src={employe.photo} /> &nbsp;{" "}
+                <img className="profile" alt={"photo"+employe.firstName} src={employe.photo} /> &nbsp;{" "}
                 {employe.firstName}
               </td>
               <td data-label="Father Name">{employe.fatherName}</td>
@@ -117,6 +122,8 @@ const Tables = () => {
               </td>
             </tr>
           ))}
+                  {result !== '' && result}
+
           {allData.length === 0 ? (
             <></>
           ) : (
