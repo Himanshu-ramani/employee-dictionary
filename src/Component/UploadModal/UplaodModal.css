@@ -1,0 +1,77 @@
+.upload_modal_container{
+    position: fixed;
+    width: 500px;
+    height: 350px;
+    background: aliceblue;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    border-radius: 5px;
+    z-index: 15;
+}
+.Select_container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.modal_profile_img{
+    margin: auto;
+    width: 30%;
+    /* height:30% ; */
+}
+#profile_Add{
+    display: none;
+}
+.modal_Cancel{
+    position: relative ;
+    background: none;
+    border: none;
+    font-weight: bolder;
+    border-radius: 3px;
+    border:  1px solid;
+    top: -60px;
+    right: -222px;
+}
+.heading_icon{
+    color: #202124 !important;
+}
+.video{
+    margin: -27px;
+}
+/* CSS */
+.button-16 {
+    background-color: #e7e7e7;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    cursor: pointer;
+    font-family: arial,sans-serif;
+    font-size: 14px;
+    height: 36px;
+    line-height: 27px;
+    min-width: 54px;
+    padding: 0 16px;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: pre;
+  }
+  
+  .button-16:hover {
+    border-color: #dadce0;
+    box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+    color: #202124;
+  }
+  
+  .button-16:focus {
+    border-color: #4285f4;
+    outline: none;
+  }
+@media only screen and (max-width: 600px) {
+    .upload_modal_container{
+        width: 95% !important;
+    }
+
+}

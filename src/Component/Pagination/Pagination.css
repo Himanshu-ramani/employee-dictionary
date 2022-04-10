@@ -1,0 +1,34 @@
+.pagination{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.pagination ul{
+    display: flex;
+    list-style: none;
+}
+.pagination ul li {
+    margin: 4px;
+}
+.pagination_td{
+    padding: 0 !important;
+}
+
+.pagination ul li button{
+    color: #0F192F;
+    background: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    border: 1px solid #0F192F;
+    border-radius: 2px;
+    border:  0;
+    padding: 4px 8px;
+}
+.pagination_active{
+  
+    color: #fff !important ;
+    background: #0F192F !important;
+    border: 0 !important;
+    border-radius: 2px !important;
+}

@@ -1,0 +1,126 @@
+.Form{
+    width: 50%;
+    margin: auto;
+    margin-top: 40px;
+    border: 1.5px solid rgba(128, 128, 128, 0.678);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.upload_button_container{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+/* CSS */
+.button-16 {
+  background-color: #e7e7e7;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  cursor: pointer;
+  font-family: arial,sans-serif;
+  font-size: 14px;
+  height: 36px;
+  line-height: 27px;
+  min-width: 54px;
+  padding: 0 16px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: pre;
+}
+
+.button-16:hover {
+  border-color: #dadce0;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+.button-16:focus {
+  border-color: #4285f4;
+  outline: none;
+}
+.Form h3{
+    margin: 10px;
+}
+.Form input{
+    padding:10px;
+  border-radius:5px;
+    border: 1px solid gray;
+}
+.suite{
+    width: 552px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.address input{
+    margin-right: 10px;
+}
+.Name{
+    margin-right: 10px;
+}
+.post{
+    margin-top: 10px;
+    width: 352px;
+}
+.contact *{
+    margin-right:  10px;
+}
+.contact {
+    display:  flex;
+    align-items:flex-start;
+}
+.input{
+    display: inline-block;
+}
+.personal{
+    display: flex;
+    align-items:flex-start;
+}
+.invalid{
+    border: 1px solid red !important;
+    background-color: rgba(255, 0, 0, 0.137) !important;
+    padding:10px;
+    border-radius:5px;
+}
+.Form p{
+    color: red;
+}
+.address_content {
+    display: flex;
+    align-items: flex-start;
+}
+
+@media only screen and (max-width: 768px) {
+
+    Form{
+        width: 80% !important;
+    }
+    .name-Conatiner{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .Form input{
+        width: 85% !important;
+        margin: 10px; 
+    }
+    .Form div {
+        width: 100% !important; 
+   
+    }
+    .upload_button_container,.personal,.contact,.address_content,.name-Conatiner{
+       flex-direction: column;
+        justify-content: center;
+        margin: auto;
+    }
+    .upload_button_container div{
+        display: inline;
+    }
+
+    .Form p{
+        margin-left: 10px;
+    }
+}
