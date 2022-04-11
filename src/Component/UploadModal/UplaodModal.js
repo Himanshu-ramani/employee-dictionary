@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./UplaodModal.css";
 import Webcam from "react-webcam";
 import profile from "../../Assest/profile.png";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCameraAlt } from '@fortawesome/free-solid-svg-icons'
-import { faFileImage } from '@fortawesome/free-solid-svg-icons'
+import idProfile from "../../Assest/id profile.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCameraAlt } from "@fortawesome/free-solid-svg-icons";
+import { faFileImage } from "@fortawesome/free-solid-svg-icons";
 
 const videoConstraints = {
   width: 220,
@@ -21,30 +22,34 @@ const UplaodModal = ({
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
 
-  const capture =() => {
+  const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImage(imageSrc);
   };
   const [viewInput, setviewInput] = useState(false);
+  const [profileImg, setProfileImg] = useState(null)
   const [take, setTake] = useState(false);
   const [hideOption, setHideOption] = useState(false);
   const [heading, setHeading] = useState("");
   useEffect(() => {
     if (modalDetail === "photo") {
       setHeading("Your Photo");
+      setProfileImg(profile)
     }
     if (modalDetail === "panCard") {
       setHeading("Your Pan Card");
+      setProfileImg(idProfile)
     }
     if (modalDetail === "adharCard") {
       setHeading("Your Adhar Card");
+      setProfileImg(idProfile)
     }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDetail]);
-useEffect(() => {
-setFormValue(pre =>({...pre,[modalDetail]:image }))
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [image])
+  useEffect(() => {
+    setFormValue((pre) => ({ ...pre, [modalDetail]: image }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
 
   const viewGallary = () => {
     setviewInput(true);
@@ -78,15 +83,14 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
     const { files } = e.target;
     console.log(files[0]);
     const base64 = await toBase64(files[0]);
-    setFormValue(pre =>({...pre ,[modalDetail]:base64}))
+    setFormValue((pre) => ({ ...pre, [modalDetail]: base64 }));
   };
- 
+
   return (
     <div>
       <div className="Overlay"></div>{" "}
       <section className="upload_modal_container">
-        <h1>Upload {heading}</h1>
-        <button
+      <button
           type="button"
           className="modal_Cancel"
           onClick={(e) => {
@@ -95,17 +99,19 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
         >
           X
         </button>
+        <h1>Upload {heading}</h1>
+     
         {!hideOption && (
           <div className="Select_container">
             <div>
-            <FontAwesomeIcon icon={faFileImage} />
+              <FontAwesomeIcon icon={faFileImage} />
               <p className="heading_icon">Chose from Gallary</p>
               <button type="button" className="button-16" onClick={viewGallary}>
                 Chose
               </button>
             </div>
             <div>
-            <FontAwesomeIcon icon={faCameraAlt} />
+              <FontAwesomeIcon icon={faCameraAlt} />
               <p className="heading_icon">Take from camrea</p>
               <button type="button" className="button-16" onClick={viewCapute}>
                 Take
@@ -115,12 +121,13 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
         )}
         {viewInput && (
           <div>
-            <div>
+            <div className="gallary_conatiner">
               <img
-                className="modal_profile_img" alt="upload_image"
+                className="modal_profile_img"
+                alt="upload_image"
                 src={
                   formValue[modalDetail] === ""
-                    ? profile
+                    ? profileImg
                     : formValue[modalDetail]
                 }
               />{" "}
@@ -133,7 +140,12 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
               </button>
             </div>
 
-            <input type="file" id="profile_Add" onChange={photoUploadHandler} accept='image/*' />
+            <input
+              type="file"
+              id="profile_Add"
+              onChange={photoUploadHandler}
+              accept="image/*"
+            />
 
             <div>
               <button type="button" className="button-16" onClick={back}>
@@ -146,6 +158,7 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
           <div className="video">
             {" "}
             {image === "" ? (
+            
               <Webcam
                 audio={false}
                 height={200}
@@ -154,23 +167,24 @@ setFormValue(pre =>({...pre,[modalDetail]:image }))
                 width={220}
                 videoConstraints={videoConstraints}
               />
+      
             ) : (
-              <img src={image} alt='capture img'/>
+              <img src={image} alt="capture img" />
             )}
             {image !== "" ? (
-              <div>
-                <button className="button-16"
+              <div >
+                <button
+                  className="button-16"
                   onClick={(e) => {
                     e.preventDefault();
                     setImage("");
                   }}
-                 
                 >
                   Retake Image
                 </button>
               </div>
             ) : (
-              <div>
+              <div className="cam_button_container">
                 <button
                   onClick={(e) => {
                     e.preventDefault();

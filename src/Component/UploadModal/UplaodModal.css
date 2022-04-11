@@ -30,14 +30,22 @@
     font-weight: bolder;
     border-radius: 3px;
     border:  1px solid;
-    top: -60px;
+    top: 7px;
     right: -222px;
 }
 .heading_icon{
     color: #202124 !important;
 }
-.video{
-    margin: -27px;
+
+h1{
+    margin: 10px;
+}
+.cam_button_container{
+    display: flex;
+    justify-content: center;
+}
+.cam_button_container *{
+    margin: 0 10px;
 }
 /* CSS */
 .button-16 {
@@ -69,9 +77,33 @@
     border-color: #4285f4;
     outline: none;
   }
+
 @media only screen and (max-width: 600px) {
     .upload_modal_container{
         width: 95% !important;
+    }
+    .modal_Cancel{
+        top: 13px;
+        right: -128px;
+    }
+    .Select_container div{
+        display: block;
+    }
+    /*  */
+    .gallary_conatiner img{
+         display: block;
+         margin-bottom: 20px;
+    }
+    .cam{
+        display: block;
+    }
+    .upload_button_container div{
+        display: flex;
+        justify-content: center;
+    }
+    .upload_button_container div button{
+        width: 90%;
+        margin: 5px;
     }
 
 }

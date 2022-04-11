@@ -1,28 +1,36 @@
 import React,{useEffect,useState} from 'react'
-import {  useSelector } from "react-redux";
 import {useParams} from 'react-router-dom'
 import { db } from '../../Firebase/Firebase';
 import './View.css'
-import {collection ,getDoc,data ,doc, } from 'firebase/firestore'
+import {getDoc,doc, } from 'firebase/firestore'
 import ModalWindow from '../ModalWindow/ModalWindow';
+import NoConnection from '../NoConection/NoConnection';
 function View() {
 const {id} = useParams()
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
+const [connection, setConnection] = useState(true)
 const getData = async()=>{
-  setLoading(true)
-  const userDoc = doc(db,'employee', id)
-  const docm = await getDoc(userDoc)
-  setObjectData(docm.data())
-  setLoading(false)
-console.log(docm.data());
+  if (navigator.onLine) {
+    try {
+      setLoading(true)
+      const userDoc = doc(db,'employee', id)
+      const docm = await getDoc(userDoc)
+      setObjectData(docm.data())
+      setLoading(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }else{
+    setConnection(navigator.onLine)
+  }
 }
 useEffect(() => {
 getData()
+     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [])
 const spinner = <div className="spinner"></div>
-console.log(objectData);
-// console.log(state);
+
 //img modal
 const [imageHanlder, setImageHanlder] = useState(null)
 const viewAdharHandler =()=>{
@@ -34,10 +42,11 @@ const viewPanHandler =()=>{
 }
   return (
     <>
+    {!connection && <NoConnection />}
     {loading && spinner}
-    <section className='view_continer'>
+   {connection && <section className='view_continer'>
     <div className='Address_Conatiner'>
-      <div><img src={objectData.photo} className='photo_view' /></div>
+      <div><img src={objectData.photo} alt={'img'+objectData.firstName} className='photo_view' /></div>
       <div className='Name_Container'>
         <h1 className='view_name'>{objectData.firstName} {objectData.fatherName}</h1>
         <p className='view_post'>POST: {objectData.post}</p>
@@ -49,12 +58,6 @@ const viewPanHandler =()=>{
         <p>Native Number: {objectData.nativePhoneNumber}</p>
       </div>
       </div>
-        {/* <h4>Contact Number</h4>
-      <div className='contact_Container'>
-        <p>Personal Number : {objectData.tempPhoneNumber}</p>
-        <p>Home Number: {objectData.permanentPhoneNumber}</p>
-        <p>Native Number: {objectData.nativePhoneNumber}</p>
-      </div> */}
       <div className='Address_Conatiner'>
 <div>
   <h4>Temporary Address</h4>
@@ -84,7 +87,7 @@ const viewPanHandler =()=>{
 <button onClick={viewPanHandler}>Pan View</button>
 
 </div>
-    </section>
+    </section>}
     </>
   )
 }

@@ -1,0 +1,8 @@
+.connection{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: red;
+    position: sticky;
+    top: 0;
+}

@@ -1,6 +1,6 @@
 .nav{
     display: flex;
-    justify-content: space-between;
+    justify-content:flex-end;
     background-color: #7549F6;
 }
 .nav_content{
@@ -11,9 +11,10 @@
     margin: 10px;
 }
 
-.nav ul{
+.nav_button_container{
     list-style: none;
     display: flex;
+    justify-content: center;
 }
 .link{
     text-decoration: none;
@@ -27,6 +28,26 @@
     background-color: #987de9;
     padding: 4px 8px;
     border-radius: 3px;
+}
+ /* expand search */
+.hide{
+    display: none;
+}
+.click_content{
+    width: 100%;
+}
+.serach{
+    margin: 0;
+    padding: 0;
+    width: 95%;
+}
+.search_input{
+    width: 95%;
+}
+.search_container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 @media only screen and (max-width: 668px) {
     .nav_content{

@@ -9,24 +9,37 @@ import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
+import NoConnection from "../NoConection/NoConnection";
 const Tables = () => {
   const [employees, setEmployees] = useState([]);
   const userCollectionRef = collection(db, "employee");
   const [loading, setloading] = useState(false);
+  const [result, setResult] = useState('')
+  const [connection, setConnection] = useState(true)
+    //AllData
+    const [allData, setallData] = useState([]);
   const state = useSelector((state) => state);
   const getEmployee = async () => {
-    setloading(true);
-    try {
-      const data = await getDocs(userCollectionRef);
-      setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      setloading(false);
-    } catch (e) {
-      console.log(e);
-    }
+      if (navigator.onLine) {
+        try {
+          setloading(true);
+        const data = await getDocs(userCollectionRef);
+        setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setloading(false);
+          if (data.docs.map((doc) => ({ ...doc.data(), id: doc.id })).length === 0) {
+            setResult('Please Check Your Connection Reload the Page')
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        setConnection(navigator.onLine)
+      }else{
+        setConnection(navigator.onLine)
+      }
+  
   };
-  //AllData
-  const [allData, setallData] = useState([]);
+
   // delete user
   const deleteEmployee = async (id) => {
     if (window.confirm("Are you sure you want to delete")) {
@@ -42,7 +55,8 @@ const Tables = () => {
       } 
     }
   };
-  const [result, setResult] = useState('')
+  
+
   useEffect(() => {
     getEmployee();
      // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +99,9 @@ const Tables = () => {
   };
   return (
     <>
-      <table className="table">
+    {!connection &&<NoConnection />}
+    {result !== '' && result}
+     {connection && !!!result&& <table className="table">
         <thead>
           <tr>
             <th>Name</th>
@@ -99,13 +115,16 @@ const Tables = () => {
           {!loading && currentEmployees.map((employe) => (
             <tr key={employe.id}>
               <td data-label="First Name" className="profile_row">
+                <div className="name_conatiner">
                 <img className="profile" alt={"photo"+employe.firstName} src={employe.photo} /> &nbsp;{" "}
-                {employe.firstName}
+                <span>{employe.firstName}</span>
+                </div>
               </td>
               <td data-label="Father Name">{employe.fatherName}</td>
               <td data-label="Post">{employe.post}</td>
               <td data-label="Phone Number">{employe.nativePhoneNumber}</td>
-              <td data-label="Delete/Update" className="td_button_container">
+              <td data-label="Delete/Update" >
+                <div className="td_button_container">
                 <button className="button-10"
                   onClick={() => {
                     deleteEmployee(employe.id);
@@ -119,11 +138,10 @@ const Tables = () => {
                 <Link to={`/update/${employe.id}`}>
                   <button className="button-10"><FontAwesomeIcon icon={faPencil} /></button>
                 </Link>
+                </div>
               </td>
             </tr>
           ))}
-                  {result !== '' && result}
-
           {allData.length === 0 ? (
             <></>
           ) : (
@@ -137,7 +155,7 @@ const Tables = () => {
             />
           )}
         </tbody>
-      </table>
+      </table>}
       {loading && spinner}
       <Toaster position="top-center" reverseOrder={false} />
     </>

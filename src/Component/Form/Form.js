@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
 
 import UplaodModal from "../UploadModal/UplaodModal";
+import NoConnection from "../NoConection/NoConnection";
 
 const Form = () => {
   const { id } = useParams();
@@ -57,7 +58,7 @@ const Form = () => {
     photo: "",
   });
   const [loading, setloading] = useState(false);
-
+  const [connection, setConnection] = useState(true)
   useEffect(() => {
     if (id) {
       const getData = async () => {
@@ -105,26 +106,33 @@ const Form = () => {
     const { name, value } = e.target;
     if (value.trim() === "") {
       setIsValid({ ...isValid, [name]: true });
+      setFormSubmit((pre) => ({ ...pre, [name]: true }));
     } else {
       setIsValid({ ...isValid, [name]: false });
+      setFormSubmit((pre) => ({ ...pre, [name]: false }));
     }
   };
   let navigate = useNavigate();
 
   const uploadData = async () => {
-    try {
-      setloading(true);
-      await addDoc(userCollectionRef, formValue);
-      console.log("succes");
-      setloading(false);
-      toast.success("Uploaded Sucessfully!");
-      setTimeout(() => {
-        navigate("/Employee-list");
-      }, 5000);
-    } catch (err) {
-      console.log(err);
-      toast.error(err);
+    if (navigator.onLine) {
+      setConnection(navigator.onLine)
+      try {
+        setloading(true);
+        await addDoc(userCollectionRef, formValue);
+        setloading(false);
+        toast.success("Uploaded Sucessfully!");
+        setTimeout(() => {
+          navigate("/Employee-list");
+        }, 5000);
+      } catch (err) {
+        console.log(err);
+        toast.error(err);
+      }
+    }else{
+      setConnection(navigator.onLine)
     }
+  
   };
   //validation
   const validation = () => {
@@ -138,17 +146,18 @@ const Form = () => {
       }
     }
   };
-  let submitValid = true;
-  if (Object.values(formSubmit).includes(true)) {
-    submitValid = false;
-  }
+  
 
   //submit
   const userCollectionRef = collection(db, "employee");
   const formSubmitHandler = (event) => {
     event.preventDefault();
     validation();
-    console.log(submitValid);
+  setConnection(navigator.onLine)
+    let submitValid = true;
+  if (Object.values(formSubmit).includes(true)) {
+    submitValid = false;
+  }
     if (!submitValid) {
       return;
     }
@@ -157,6 +166,13 @@ const Form = () => {
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
+    if (value.trim() === "") {
+      setIsValid({ ...isValid, [name]: true });
+      setFormSubmit((pre) => ({ ...pre, [name]: true }));
+    } else {
+      setIsValid({ ...isValid, [name]: false });
+      setFormSubmit((pre) => ({ ...pre, [name]: false }));
+    }
   };
 
   ////////
@@ -164,17 +180,23 @@ const Form = () => {
   const update = async (e) => {
     e.preventDefault();
     const userDoc = doc(db, "employee", id);
-    try {
-      setloading(true)
-    await updateDoc(userDoc, formValue);
-      setloading(false)
-      toast.success("updated Succesfully")
-      setTimeout(() => {
-        navigate("/Employee-list");
-      }, 5000);
-    } catch (error) {
-      console.log(error);
+    if (navigator.onLine) {
+      setConnection(navigator.onLine)
+      try {
+        setloading(true)
+      await updateDoc(userDoc, formValue);
+        setloading(false)
+        toast.success("updated Succesfully")
+        setTimeout(() => {
+          navigate("/Employee-list");
+        }, 5000);
+      } catch (error) {
+        toast.error(error)
+      }
+    }else{
+      setConnection(navigator.onLine)
     }
+    
   };
 
   //view modal
@@ -199,6 +221,7 @@ const Form = () => {
 
   return (
     <>
+    {!connection && <NoConnection />}
        <form onSubmit={formSubmitHandler} className="Form">
         {loading && spinner}
 
