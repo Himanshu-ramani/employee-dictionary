@@ -27,7 +27,10 @@ const Tables = () => {
         setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
         setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
         setloading(false);
-          if (data.docs.map((doc) => ({ ...doc.data(), id: doc.id })).length === 0) {
+        console.log(data);
+      /*mh {_firestore: gc, _userDataWriter: Qh, _snapshot: Ea, metadata: dh, query: ac}metadata: dhfromCache: truehasPendingWrites: false[[Prototype]]: Objectquery: ac {converter: null, _query: ve, type: 'collection', firestore: gc, _path: _t}_firestore: gc {_authCredentials: J, _appCheckCredentials: tt, type: 'firestore', _persistenceKey: '[DEFAULT]', _settings: nc, …}_snapshot: Ea {query: ve, docs: Ia, oldDocs: Ia, docChanges: Array(0), mutatedKeys: kn, …}_userDataWriter: Qh {firestore: gc}docs: (...)empty: (...)size: (...)[[Prototype]]: Object
+ */
+          if (!data.docs) {
             setResult('Please Check Your Connection Reload the Page')
           }
         } catch (e) {
