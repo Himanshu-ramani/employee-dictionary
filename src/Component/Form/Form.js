@@ -5,9 +5,10 @@ import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
-
 import UplaodModal from "../UploadModal/UplaodModal";
 import NoConnection from "../NoConection/NoConnection";
+import { useSelector,useDispatch } from "react-redux";
+// local storage
 
 const Form = () => {
   const { id } = useParams();
@@ -59,15 +60,21 @@ const Form = () => {
   });
   const [loading, setloading] = useState(false);
   const [connection, setConnection] = useState(true)
+  const dispatch = useDispatch()
   useEffect(() => {
     if (id) {
       const getData = async () => {
         setloading(true);
-        const userDoc = doc(db, "employee", id);
-        const docm = await getDoc(userDoc);
-        setFormValue({ ...docm.data() });
+        const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
+        const [data]= localStorageData.filter(obj => {
+          return obj.id == id
+        })
+            setFormValue(data);
+        // const userDoc = doc(db, "employee", id);
+        // const docm = await getDoc(userDoc);
+        // setFormValue({ ...docm.data() });
         setloading(false);
-        console.log(docm.data());
+      
       };
       getData();
     }
@@ -112,41 +119,84 @@ const Form = () => {
       setFormSubmit((pre) => ({ ...pre, [name]: false }));
     }
   };
+    //validation
+    const validation = () => {
+      for (const key in isValid) {
+        if (formValue[key].trim() === "") {
+          setFormSubmit((pre) => ({ ...pre, [key]: true }));
+          setIsValid((pre) => ({ ...pre, [key]: true }));
+        } else {
+          setIsValid((pre) => ({ ...pre, [key]: false }));
+          setFormSubmit((pre) => ({ ...pre, [key]: false }));
+        }
+      }
+    };
+
+    // uploadData();  
+  const inputChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setFormValue({ ...formValue, [name]: value });
+    if (value.trim() === "") {
+      setIsValid({ ...isValid, [name]: true });
+      setFormSubmit((pre) => ({ ...pre, [name]: true }));
+    } else {
+      setIsValid({ ...isValid, [name]: false });
+      setFormSubmit((pre) => ({ ...pre, [name]: false }));
+    }
+  };
+  const gState = useSelector((state) => state);
+  const update =() =>{
+    setloading(true)
+    const newDataArray = gState.gobalData.map(
+      (obj) => [formValue].find((o) => o.id === id) || obj
+    );
+    localStorage.setItem("firebaseEmployee", JSON.stringify(newDataArray));
+    dispatch({ type: "UPDATE", payload: newDataArray });
+    setloading(false)
+    toast.success("Updated Sucessfully!");
+    setTimeout(() => {
+      navigate("/Employee-list");
+    }, 2000);
+
+  }
+
+  const upload =() =>{
+    console.log(formValue);
+    setloading(true)
+
+    localStorage.setItem('firebaseEmployee',JSON.stringify([...gState.gobalData,{...formValue,id:Math.random()}]))
+    dispatch({type:'ADD',payload:[...gState.gobalData,{...formValue,id:Math.random()}]})
+    toast.success("Uploaded Sucessfully!");
+    setloading(false)
+          setTimeout(() => {
+            navigate("/Employee-list");
+          }, 2000);
+    console.log("hai");
+  }
+    
   let navigate = useNavigate();
 
-  const uploadData = async () => {
-    if (navigator.onLine) {
-      setConnection(navigator.onLine)
-      try {
-        setloading(true);
-        await addDoc(userCollectionRef, formValue);
-        setloading(false);
-        toast.success("Uploaded Sucessfully!");
-        setTimeout(() => {
-          navigate("/Employee-list");
-        }, 5000);
-      } catch (err) {
-        console.log(err);
-        toast.error(err);
-      }
-    }else{
-      setConnection(navigator.onLine)
-    }
+  // const uploadData = async () => {
+  //   if (navigator.onLine) {
+  //     setConnection(navigator.onLine)
+  //     try {
+  //       setloading(true);
+  //       await addDoc(userCollectionRef, formValue);
+  //       setloading(false);
+  //       toast.success("Uploaded Sucessfully!");
+  //       setTimeout(() => {
+  //         navigate("/Employee-list");
+  //       }, 5000);
+  //     } catch (err) {
+  //       console.log(err);
+  //       toast.error(err);
+  //     }
+  //   }else{
+  //     setConnection(navigator.onLine)
+  //   }
   
-  };
-  //validation
-  const validation = () => {
-    for (const key in isValid) {
-      if (formValue[key].trim() === "") {
-        setFormSubmit((pre) => ({ ...pre, [key]: true }));
-        setIsValid((pre) => ({ ...pre, [key]: true }));
-      } else {
-        setIsValid((pre) => ({ ...pre, [key]: false }));
-        setFormSubmit((pre) => ({ ...pre, [key]: false }));
-      }
-    }
-  };
-  
+  // };
+
 
   //submit
   const userCollectionRef = collection(db, "employee");
@@ -161,43 +211,33 @@ const Form = () => {
     if (!submitValid) {
       return;
     }
-    uploadData();  
+    upload()
   };
-  const inputChangeHandler = (e) => {
-    const { name, value } = e.target;
-    setFormValue({ ...formValue, [name]: value });
-    if (value.trim() === "") {
-      setIsValid({ ...isValid, [name]: true });
-      setFormSubmit((pre) => ({ ...pre, [name]: true }));
-    } else {
-      setIsValid({ ...isValid, [name]: false });
-      setFormSubmit((pre) => ({ ...pre, [name]: false }));
-    }
-  };
+
 
   ////////
 
-  const update = async (e) => {
-    e.preventDefault();
-    const userDoc = doc(db, "employee", id);
-    if (navigator.onLine) {
-      setConnection(navigator.onLine)
-      try {
-        setloading(true)
-      await updateDoc(userDoc, formValue);
-        setloading(false)
-        toast.success("updated Succesfully")
-        setTimeout(() => {
-          navigate("/Employee-list");
-        }, 5000);
-      } catch (error) {
-        toast.error(error)
-      }
-    }else{
-      setConnection(navigator.onLine)
-    }
+  // const update = async (e) => {
+  //   e.preventDefault();
+  //   const userDoc = doc(db, "employee", id);
+  //   if (navigator.onLine) {
+  //     setConnection(navigator.onLine)
+  //     try {
+  //       setloading(true)
+  //     await updateDoc(userDoc, formValue);
+  //       setloading(false)
+  //       toast.success("updated Succesfully")
+  //       setTimeout(() => {
+  //         navigate("/Employee-list");
+  //       }, 5000);
+  //     } catch (error) {
+  //       toast.error(error)
+  //     }
+  //   }else{
+  //     setConnection(navigator.onLine)
+  //   }
     
-  };
+  // };
 
   //view modal
   const [viewModal, setviewModal] = useState(false);

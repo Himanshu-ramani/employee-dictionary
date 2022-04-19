@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../Firebase/Firebase";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import "./table.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash,faEye,faPencil } from '@fortawesome/free-solid-svg-icons'
-import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
@@ -16,61 +15,85 @@ const Tables = () => {
   const [loading, setloading] = useState(false);
   const [result, setResult] = useState('')
   const [connection, setConnection] = useState(true)
+  const dispatch = useDispatch()
     //AllData
     const [allData, setallData] = useState([]);
   const state = useSelector((state) => state);
-  const getEmployee = async () => {
-      if (navigator.onLine) {
-        try {
-          setloading(true);
-        const data = await getDocs(userCollectionRef);
-        setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-        setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-        setloading(false);
-        console.log(data);
-      /*mh {_firestore: gc, _userDataWriter: Qh, _snapshot: Ea, metadata: dh, query: ac}metadata: dhfromCache: truehasPendingWrites: false[[Prototype]]: Objectquery: ac {converter: null, _query: ve, type: 'collection', firestore: gc, _path: _t}_firestore: gc {_authCredentials: J, _appCheckCredentials: tt, type: 'firestore', _persistenceKey: '[DEFAULT]', _settings: nc, …}_snapshot: Ea {query: ve, docs: Ia, oldDocs: Ia, docChanges: Array(0), mutatedKeys: kn, …}_userDataWriter: Qh {firestore: gc}docs: (...)empty: (...)size: (...)[[Prototype]]: Object
- */
-          if (!data.docs) {
-            setResult('Please Check Your Connection Reload the Page')
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        setConnection(navigator.onLine)
-      }else{
-        setConnection(navigator.onLine)
-      }
-  
-  };
+  console.log(state);
 
-  // delete user
-  const deleteEmployee = async (id) => {
-    if (window.confirm("Are you sure you want to delete")) {
-      setloading(true);
-      const employeDoc = doc(db, "employee", id);
-      try {
-      await deleteDoc(employeDoc);
-      getEmployee();
-      setloading(false);
-      toast.success("Successfully toasted!");
-      } catch (error) {
-        console.log(error);
-      } 
-    }
-  };
+const getEmployee =()=>{
+  setallData(state.gobalData)
+  setEmployees(state.gobalData)
+}
+
+
+
+const deleteEmployee =(id)=>{
+  const newArray = state.gobalData.filter((ele) => {
+    return ele.id != id;
+  });
+  
+  localStorage.setItem('firebaseEmployee',JSON.stringify(newArray))
+  dispatch({type:'DELETE',payload:newArray})
+}
+
+
+
+
+/////////////////////////////////////////
+////////////////////////////////////////////
+/////////////////////////////////////////////
+  ////////////////////////////////////////////
+  // const getEmployee = async () => {
+  //     if (navigator.onLine) {
+  //       try {
+  //         setloading(true);
+  //       const data = await getDocs(userCollectionRef);
+  //       setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //       setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //       setloading(false);
+  //       console.log(data);
+  //         if (!data.docs) {
+  //           setResult('Please Check Your Connection Reload the Page')
+  //         }
+  //       } catch (e) {
+  //         console.log(e);
+  //       }
+  //       setConnection(navigator.onLine)
+  //     }else{
+  //       setConnection(navigator.onLine)
+  //     }
+  
+  // };
+
+  // // delete user
+  // const deleteEmployee = async (id) => {
+  //   if (window.confirm("Are you sure you want to delete")) {
+  //     setloading(true);
+  //     const employeDoc = doc(db, "employee", id);
+  //     try {
+  //     await deleteDoc(employeDoc);
+  //     getEmployee();
+  //     setloading(false);
+  //     toast.success("Successfully toasted!");
+  //     } catch (error) {
+  //       console.log(error);
+  //     } 
+  //   }
+  // };
   
 
   useEffect(() => {
     getEmployee();
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.gobalData]);
   useEffect(() => {
-    if (state !== "") {
-      const newData = employees.filter((employe) => {
+    if (state.searchState !== "") {
+      const newData = state.gobalData.filter((employe) => {
         return Object.values(employe)
           .join("")
           .toLowerCase()
-          .includes(state.toLowerCase());
+          .includes(state.searchState.toLowerCase());
       });
       setEmployees(newData);
       setResult(newData.length !== 0 ? "" : "No result Found")
@@ -79,7 +102,7 @@ const Tables = () => {
       setResult('')
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state.searchState]);
   //spiner
   const spinner = <div className="spinner"></div>;
   //pagination
@@ -90,7 +113,7 @@ const Tables = () => {
   // Get Current posts
   const indexOfLastPosts = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPosts - postPerPage;
-  const currentEmployees = employees.slice(indexOfFirstPost, indexOfLastPosts);
+  const currentEmployees = state.gobalData.slice(indexOfFirstPost, indexOfLastPosts);
 
   //change Page
   const paginate = (pageNumber) => {

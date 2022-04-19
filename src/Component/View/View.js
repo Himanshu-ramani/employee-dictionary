@@ -10,21 +10,31 @@ const {id} = useParams()
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
 const [connection, setConnection] = useState(true)
-const getData = async()=>{
-  if (navigator.onLine) {
-    try {
-      setLoading(true)
-      const userDoc = doc(db,'employee', id)
-      const docm = await getDoc(userDoc)
-      setObjectData(docm.data())
-      setLoading(false)
-    } catch (error) {
-      console.log(error);
-    }
-  }else{
-    setConnection(navigator.onLine)
-  }
+
+const getData =()=>{
+  setLoading(true)
+  const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
+  const [data]= localStorageData.filter(obj => {
+    return obj.id == id
+  })
+  setObjectData(data)
+  setLoading(false)
 }
+// const getData = async()=>{
+//   if (navigator.onLine) {
+//     try {
+//       setLoading(true)
+//       const userDoc = doc(db,'employee', id)
+//       const docm = await getDoc(userDoc)
+//       setObjectData(docm.data())
+//       setLoading(false)
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }else{
+//     setConnection(navigator.onLine)
+//   }
+// }
 useEffect(() => {
 getData()
      // eslint-disable-next-line react-hooks/exhaustive-deps
