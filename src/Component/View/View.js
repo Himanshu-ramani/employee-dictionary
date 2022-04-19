@@ -2,6 +2,7 @@ import React,{useEffect,useState} from 'react'
 import {useParams} from 'react-router-dom'
 import { db } from '../../Firebase/Firebase';
 import './View.css'
+import { useSelector,useDispatch } from "react-redux";
 import {getDoc,doc, } from 'firebase/firestore'
 import ModalWindow from '../ModalWindow/ModalWindow';
 import NoConnection from '../NoConection/NoConnection';
@@ -10,11 +11,12 @@ const {id} = useParams()
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
 const [connection, setConnection] = useState(true)
+const state = useSelector((state) => state);
 
 const getData =()=>{
   setLoading(true)
-  const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
-  const [data]= localStorageData.filter(obj => {
+
+  const [data]= state.gobalData.filter(obj => {
     return obj.id == id
   })
   setObjectData(data)
