@@ -160,17 +160,21 @@ const Form = () => {
 
   }
 
-  const upload =() =>{
+  const upload = async() =>{
     console.log(formValue);
     setloading(true)
 
     localStorage.setItem('firebaseEmployee',JSON.stringify([...gState.gobalData,{...formValue,id:Math.random()}]))
+
+          await addDoc(userCollectionRef, {...formValue,id:Math.random()});
+
+          toast.success("cloud upload!");
     dispatch({type:'ADD',payload:[...gState.gobalData,{...formValue,id:Math.random()}]})
     toast.success("Uploaded Sucessfully!");
     setloading(false)
-          setTimeout(() => {
-            navigate("/Employee-list");
-          }, 2000);
+          // setTimeout(() => {
+          //   navigate("/Employee-list");
+          // }, 2000);
     console.log("hai");
   }
     

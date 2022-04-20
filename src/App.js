@@ -5,7 +5,18 @@ import { Route, Routes,Navigate} from 'react-router-dom';
 import TablePage from './Pages/TablePage';
 import AddForm from './Pages/AddForm'
 import View from './Component/View/View';
+import { useSelector,useDispatch } from "react-redux";
+import React,{useEffect} from 'react';
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {db} from './Firebase/Firebase'
 function App() {
+  const userCollectionRef = collection(db, "employee");
+  const dispatch =  useDispatch()
+useEffect(async() => {
+         const data = await getDocs(userCollectionRef);
+         dispatch({type :"API_CALL", payload:data.docs.map((doc) => ({ ...doc.data()}))})
+}, [])
+
   return (
     <>
       <Header />
