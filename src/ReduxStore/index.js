@@ -1,7 +1,19 @@
 import { createStore,combineReducers} from "redux";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../Firebase/Firebase";
 
+const userCollectionRef = collection(db, "employee");
+
+let dataArray =[]
+const dataFunction  = async() =>{
+  const data = await getDocs(userCollectionRef);
+  dataArray= data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+}
+dataFunction()
+
+     
 const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
-const gobalData =(state=localStorageData,action) =>{
+const gobalData =(state=dataArray ,action) =>{
   if(action.type === 'ADD'){
     return(state = action.payload)
   }
