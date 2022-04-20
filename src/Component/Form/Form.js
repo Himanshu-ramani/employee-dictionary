@@ -11,6 +11,7 @@ import { useSelector,useDispatch } from "react-redux";
 // local storage
 
 const Form = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [formSubmit, setFormSubmit] = useState({
     firstName:true,
@@ -65,14 +66,9 @@ const Form = () => {
     if (id) {
       const getData = async () => {
         setloading(true);
-        const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
-        const [data]= localStorageData.filter(obj => {
-          return obj.id == id
-        })
-            setFormValue(data);
-        // const userDoc = doc(db, "employee", id);
-        // const docm = await getDoc(userDoc);
-        // setFormValue({ ...docm.data() });
+        const userDoc = doc(db, "employee", id);
+        const docm = await getDoc(userDoc);
+        setFormValue({ ...docm.data() });
         setloading(false);
       
       };
@@ -145,61 +141,42 @@ const Form = () => {
     }
   };
   const gState = useSelector((state) => state);
-  const update =() =>{
-    setloading(true)
-    const newDataArray = gState.gobalData.map(
-      (obj) => [formValue].find((o) => o.id === id) || obj
-    );
-    localStorage.setItem("firebaseEmployee", JSON.stringify(newDataArray));
-    dispatch({ type: "UPDATE", payload: newDataArray });
-    setloading(false)
-    toast.success("Updated Sucessfully!");
-    setTimeout(() => {
-      navigate("/Employee-list");
-    }, 2000);
+  const update = async(e) =>{
+    e.preventDefault();
+      const userDoc = doc(db, "employee", id);
+      if (navigator.onLine) {
+        setConnection(navigator.onLine)
+        try {
+          setloading(true)
+        await updateDoc(userDoc, formValue);   
+        const updatedData = gState.gobalData.map(x => (x.id === id ? { ...formValue,id:id} : x));
 
+    dispatch({ type: "UPDATE", payload: updatedData });
+          setloading(false)       
+         toast.success("updated Succesfully")
+          setTimeout(() => {
+            navigate("/Employee-list");
+          }, 2000);
+        } catch (error) {
+          toast.error(error)
+        }
+      }else{
+        setConnection(navigator.onLine)
+      }
   }
 
   const upload = async() =>{
     console.log(formValue);
     setloading(true)
-
-    localStorage.setItem('firebaseEmployee',JSON.stringify([...gState.gobalData,{...formValue,id:Math.random()}]))
-
-          await addDoc(userCollectionRef, {...formValue,id:Math.random()});
-
-          toast.success("cloud upload!");
-    dispatch({type:'ADD',payload:[...gState.gobalData,{...formValue,id:Math.random()}]})
+     const doc=  await addDoc(userCollectionRef,formValue);
+    dispatch({type:'ADD',payload:[...gState.gobalData,{...formValue,id:doc.id}]})
     toast.success("Uploaded Sucessfully!");
     setloading(false)
-          // setTimeout(() => {
-          //   navigate("/Employee-list");
-          // }, 2000);
-    console.log("hai");
   }
     
-  let navigate = useNavigate();
 
-  // const uploadData = async () => {
-  //   if (navigator.onLine) {
-  //     setConnection(navigator.onLine)
-  //     try {
-  //       setloading(true);
-  //       await addDoc(userCollectionRef, formValue);
-  //       setloading(false);
-  //       toast.success("Uploaded Sucessfully!");
-  //       setTimeout(() => {
-  //         navigate("/Employee-list");
-  //       }, 5000);
-  //     } catch (err) {
-  //       console.log(err);
-  //       toast.error(err);
-  //     }
-  //   }else{
-  //     setConnection(navigator.onLine)
-  //   }
-  
-  // };
+
+
 
 
   //submit

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../Firebase/Firebase";
 import { useSelector,useDispatch } from "react-redux";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import "./table.css";
+import toast from "react-hot-toast";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash,faEye,faPencil } from '@fortawesome/free-solid-svg-icons'
 import { Toaster } from "react-hot-toast";
@@ -10,95 +11,56 @@ import { Link } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
 import NoConnection from "../NoConection/NoConnection";
 const Tables = () => {
-  const [employees, setEmployees] = useState([]);
-  const userCollectionRef = collection(db, "employee");
+  const [data , setData] = useState([])
   const [loading, setloading] = useState(false);
   const [result, setResult] = useState('')
   const [connection, setConnection] = useState(true)
   const dispatch = useDispatch()
     //AllData
-    const [allData, setallData] = useState([]);
+ 
   const state = useSelector((state) => state);
-  console.log(state);
+useEffect(() => {
+  setData(state.gobalData)
+}, [state.gobalData])
 
-const getEmployee =()=>{
-  setallData(state.gobalData)
-  setEmployees(state.gobalData)
+
+const deleteEmployee = async(id)=>{
+  if (navigator.onLine) {
+  if (window.confirm("Are you sure you want to delete")) {
+        setloading(true);
+        const employeDoc = doc(db, "employee", id);
+        try {
+        await deleteDoc(employeDoc);
+        const newArray = state.gobalData.filter((ele) => {
+          return ele.id !== id;
+        });
+        setloading(false);
+        dispatch({type:'DELETE',payload:newArray})
+        toast.success("Successfully delete!");
+        } catch (error) {
+          console.log(error);
+        } 
+      }
+    }else{
+      setConnection(navigator.onLine)
+    }
+
+  
 }
 
 
-
-const deleteEmployee =(id)=>{
-  const newArray = state.gobalData.filter((ele) => {
-    return ele.id != id;
-  });
-  
-  localStorage.setItem('firebaseEmployee',JSON.stringify(newArray))
-  dispatch({type:'DELETE',payload:newArray})
-}
-
-
-
-
-/////////////////////////////////////////
-////////////////////////////////////////////
-/////////////////////////////////////////////
-  ////////////////////////////////////////////
-  // const getEmployee = async () => {
-  //     if (navigator.onLine) {
-  //       try {
-  //         setloading(true);
-  //       const data = await getDocs(userCollectionRef);
-  //       setEmployees(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //       setallData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //       setloading(false);
-  //       console.log(data);
-  //         if (!data.docs) {
-  //           setResult('Please Check Your Connection Reload the Page')
-  //         }
-  //       } catch (e) {
-  //         console.log(e);
-  //       }
-  //       setConnection(navigator.onLine)
-  //     }else{
-  //       setConnection(navigator.onLine)
-  //     }
-  
-  // };
-
-  // // delete user
-  // const deleteEmployee = async (id) => {
-  //   if (window.confirm("Are you sure you want to delete")) {
-  //     setloading(true);
-  //     const employeDoc = doc(db, "employee", id);
-  //     try {
-  //     await deleteDoc(employeDoc);
-  //     getEmployee();
-  //     setloading(false);
-  //     toast.success("Successfully toasted!");
-  //     } catch (error) {
-  //       console.log(error);
-  //     } 
-  //   }
-  // };
-  
-
-  useEffect(() => {
-    getEmployee();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.gobalData]);
   useEffect(() => {
     if (state.searchState !== "") {
-      const newData = state.gobalData.filter((employe) => {
+      const searchData = state.gobalData.filter((employe) => {
         return Object.values(employe)
           .join("")
           .toLowerCase()
           .includes(state.searchState.toLowerCase());
       });
-      setEmployees(newData);
-      setResult(newData.length !== 0 ? "" : "No result Found")
+      setData(searchData)
+      setResult(searchData.length !== 0 ? "" : "No result Found")
     } else {
-      setEmployees(allData);
+      setData(state.gobalData)
       setResult('')
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,7 +75,7 @@ const deleteEmployee =(id)=>{
   // Get Current posts
   const indexOfLastPosts = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPosts - postPerPage;
-  const currentEmployees = state.gobalData.slice(indexOfFirstPost, indexOfLastPosts);
+  const currentEmployees = data.slice(indexOfFirstPost, indexOfLastPosts);
 
   //change Page
   const paginate = (pageNumber) => {
@@ -168,12 +130,12 @@ const deleteEmployee =(id)=>{
               </td>
             </tr>
           ))}
-          {allData.length === 0 ? (
+          {state.gobalData.length === 0 ? (
             <></>
           ) : (
             <Pagination
               postPerPage={postPerPage}
-              totalPosts={allData.length}
+              totalPosts={state.gobalData.length}
               paginate={paginate}
               perPage={perPage}
               currentPage={currentPage}

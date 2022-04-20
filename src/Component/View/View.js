@@ -2,7 +2,6 @@ import React,{useEffect,useState} from 'react'
 import {useParams} from 'react-router-dom'
 import { db } from '../../Firebase/Firebase';
 import './View.css'
-import { useSelector,useDispatch } from "react-redux";
 import {getDoc,doc, } from 'firebase/firestore'
 import ModalWindow from '../ModalWindow/ModalWindow';
 import NoConnection from '../NoConection/NoConnection';
@@ -11,32 +10,26 @@ const {id} = useParams()
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
 const [connection, setConnection] = useState(true)
-const state = useSelector((state) => state);
 
-const getData =()=>{
+const getData =async()=>{
   setLoading(true)
-
-  const [data]= state.gobalData.filter(obj => {
-    return obj.id == id
-  })
-  setObjectData(data)
+  if (navigator.onLine) {
+    try {
+      setLoading(true)
+      const userDoc = doc(db,'employee', id)
+      const docm = await getDoc(userDoc)
+      setObjectData(docm.data())
+      setLoading(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }else{
+    setConnection(navigator.onLine)
+  }
+  
   setLoading(false)
 }
-// const getData = async()=>{
-//   if (navigator.onLine) {
-//     try {
-//       setLoading(true)
-//       const userDoc = doc(db,'employee', id)
-//       const docm = await getDoc(userDoc)
-//       setObjectData(docm.data())
-//       setLoading(false)
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }else{
-//     setConnection(navigator.onLine)
-//   }
-// }
+
 useEffect(() => {
 getData()
      // eslint-disable-next-line react-hooks/exhaustive-deps

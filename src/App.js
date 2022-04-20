@@ -14,9 +14,8 @@ function App() {
   const dispatch =  useDispatch()
 useEffect(async() => {
          const data = await getDocs(userCollectionRef);
-         dispatch({type :"API_CALL", payload:data.docs.map((doc) => ({ ...doc.data()}))})
+         dispatch({type :"API_CALL", payload:data.docs.map((doc) => ({ ...doc.data(),id:doc.id}))})
 }, [])
-
   return (
     <>
       <Header />

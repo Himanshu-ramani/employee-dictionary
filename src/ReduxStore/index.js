@@ -1,13 +1,5 @@
 import { createStore,combineReducers} from "redux";
-import { collection, getDocs, } from "firebase/firestore";
-import { db } from "../Firebase/Firebase";
 
-const userCollectionRef = collection(db, "employee");
-
-let dataArray =[]
-
-     
-const localStorageData = JSON.parse(localStorage.getItem('firebaseEmployee')) || []
 const gobalData =(state= [],action) =>{
   if (action.type === 'API_CALL') {
     return(state = action.payload)
