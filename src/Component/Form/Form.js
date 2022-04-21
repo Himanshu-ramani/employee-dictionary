@@ -7,14 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
 import UplaodModal from "../UploadModal/UplaodModal";
 import NoConnection from "../NoConection/NoConnection";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // local storage
 
 const Form = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [formSubmit, setFormSubmit] = useState({
-    firstName:true,
+    firstName: true,
     fatherName: true,
     post: true,
     tempSuite: true,
@@ -35,7 +35,7 @@ const Form = () => {
     adharCard: true,
     panCard: true,
     photo: true,
-  })
+  });
   const [state] = useState({
     firstName: "",
     fatherName: "",
@@ -60,8 +60,8 @@ const Form = () => {
     photo: "",
   });
   const [loading, setloading] = useState(false);
-  const [connection, setConnection] = useState(true)
-  const dispatch = useDispatch()
+  const [connection, setConnection] = useState(true);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (id) {
       const getData = async () => {
@@ -70,7 +70,6 @@ const Form = () => {
         const docm = await getDoc(userDoc);
         setFormValue({ ...docm.data() });
         setloading(false);
-      
       };
       getData();
     }
@@ -115,23 +114,31 @@ const Form = () => {
       setFormSubmit((pre) => ({ ...pre, [name]: false }));
     }
   };
-    //validation
-    const validation = () => {
-      for (const key in isValid) {
-        if (formValue[key].trim() === "") {
-          setFormSubmit((pre) => ({ ...pre, [key]: true }));
-          setIsValid((pre) => ({ ...pre, [key]: true }));
-        } else {
-          setIsValid((pre) => ({ ...pre, [key]: false }));
-          setFormSubmit((pre) => ({ ...pre, [key]: false }));
-        }
+  //validation
+  const validation = () => {
+    for (const key in isValid) {
+      if (formValue[key].trim() === "") {
+        setFormSubmit((pre) => ({ ...pre, [key]: true }));
+        setIsValid((pre) => ({ ...pre, [key]: true }));
+      } else {
+        setIsValid((pre) => ({ ...pre, [key]: false }));
+        setFormSubmit((pre) => ({ ...pre, [key]: false }));
       }
-    };
+    }
+  };
 
-    // uploadData();  
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
+    if (name === 'tempPhoneNumber') {
+     console.log("firest"); 
+    }
+    if (name === 'permanentPhoneNumber') {
+      console.log("second"); 
+     }
+     if (name === 'nativePhoneNumber') {
+      console.log("third"); 
+     }
     if (value.trim() === "") {
       setIsValid({ ...isValid, [name]: true });
       setFormSubmit((pre) => ({ ...pre, [name]: true }));
@@ -141,84 +148,65 @@ const Form = () => {
     }
   };
   const gState = useSelector((state) => state);
-  const update = async(e) =>{
+  const update = async (e) => {
     e.preventDefault();
-      const userDoc = doc(db, "employee", id);
-      if (navigator.onLine) {
-        setConnection(navigator.onLine)
-        try {
-          setloading(true)
-        await updateDoc(userDoc, formValue);   
-        const updatedData = gState.gobalData.map(x => (x.id === id ? { ...formValue,id:id} : x));
+    const userDoc = doc(db, "employee", id);
+    if (navigator.onLine) {
+      setConnection(navigator.onLine);
+      try {
+        setloading(true);
+        await updateDoc(userDoc, formValue);
+        const updatedData = gState.gobalData.map((x) =>
+          x.id === id ? { ...formValue, id: id } : x
+        );
 
-    dispatch({ type: "UPDATE", payload: updatedData });
-          setloading(false)       
-         toast.success("updated Succesfully")
-          setTimeout(() => {
-            navigate("/Employee-list");
-          }, 2000);
-        } catch (error) {
-          toast.error(error)
-        }
-      }else{
-        setConnection(navigator.onLine)
+        dispatch({ type: "UPDATE", payload: updatedData });
+        setloading(false);
+        toast.success("updated Succesfully");
+        setTimeout(() => {
+          navigate("/Employee-list");
+        }, 2000);
+      } catch (error) {
+        toast.error(error);
       }
-  }
+    } else {
+      setConnection(navigator.onLine);
+    }
+  };
 
-  const upload = async() =>{
-    console.log(formValue);
-    setloading(true)
-     const doc=  await addDoc(userCollectionRef,formValue);
-    dispatch({type:'ADD',payload:[...gState.gobalData,{...formValue,id:doc.id}]})
-    toast.success("Uploaded Sucessfully!");
-    setloading(false)
-  }
-    
-
-
-
-
+  const upload = async () => {
+    try {
+      setloading(true);
+      const doc = await addDoc(userCollectionRef, formValue);
+      dispatch({
+        type: "ADD",
+        payload: [...gState.gobalData, { ...formValue, id: doc.id }],
+      });
+      toast.success("Uploaded Sucessfully!");
+      setTimeout(() => {
+        navigate("/Employee-list");
+      }, 2000);
+      setloading(false);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   //submit
   const userCollectionRef = collection(db, "employee");
   const formSubmitHandler = (event) => {
     event.preventDefault();
     validation();
-  setConnection(navigator.onLine)
+    setConnection(navigator.onLine);
     let submitValid = true;
-  if (Object.values(formSubmit).includes(true)) {
-    submitValid = false;
-  }
+    if (Object.values(formSubmit).includes(true)) {
+      submitValid = false;
+    }
     if (!submitValid) {
       return;
     }
-    upload()
+    upload();
   };
-
-
-  ////////
-
-  // const update = async (e) => {
-  //   e.preventDefault();
-  //   const userDoc = doc(db, "employee", id);
-  //   if (navigator.onLine) {
-  //     setConnection(navigator.onLine)
-  //     try {
-  //       setloading(true)
-  //     await updateDoc(userDoc, formValue);
-  //       setloading(false)
-  //       toast.success("updated Succesfully")
-  //       setTimeout(() => {
-  //         navigate("/Employee-list");
-  //       }, 5000);
-  //     } catch (error) {
-  //       toast.error(error)
-  //     }
-  //   }else{
-  //     setConnection(navigator.onLine)
-  //   }
-    
-  // };
 
   //view modal
   const [viewModal, setviewModal] = useState(false);
@@ -242,8 +230,8 @@ const Form = () => {
 
   return (
     <>
-    {!connection && <NoConnection />}
-       <form onSubmit={formSubmitHandler} className="Form">
+      {!connection && <NoConnection />}
+      <form onSubmit={formSubmitHandler} className="Form">
         {loading && spinner}
 
         <div>
@@ -328,7 +316,7 @@ const Form = () => {
             )}
           </div>
         </div>
-        <h3>Temp Address</h3>
+        <h3>Temporary Address</h3>
         <div className="address">
           <div>
             <input
@@ -379,7 +367,7 @@ const Form = () => {
               {isValid.tempPinCode && <p>Enter PinCode</p>}
             </div>
           </div>
-          <h3>Permenet Address</h3>
+          <h3>Permanent Address</h3>
 
           <div>
             <input
@@ -489,8 +477,11 @@ const Form = () => {
             >
               Upload Photo
             </button>
-            {isValid.photo && formValue.photo === '' ? <p>Upload your Photo</p> :<></>}
-           
+            {isValid.photo && formValue.photo === "" ? (
+              <p>Upload your Photo</p>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
             <button
@@ -500,7 +491,11 @@ const Form = () => {
             >
               Upload Adhar Card{" "}
             </button>
-            {isValid.adharCard && formValue.adharCard === '' ? <p>Upload your adharCard</p> :<></>}
+            {isValid.adharCard && formValue.adharCard === "" ? (
+              <p>Upload your adharCard</p>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
             <button
@@ -510,7 +505,11 @@ const Form = () => {
             >
               Upload Pan Card
             </button>
-            {isValid.panCard &&formValue.panCard === '' ? <p>Upload your PanCard</p> :<></>}
+            {isValid.panCard && formValue.panCard === "" ? (
+              <p>Upload your PanCard</p>
+            ) : (
+              <></>
+            )}
           </div>
           {viewModal && (
             <UplaodModal

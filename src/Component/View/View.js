@@ -5,12 +5,13 @@ import './View.css'
 import {getDoc,doc, } from 'firebase/firestore'
 import ModalWindow from '../ModalWindow/ModalWindow';
 import NoConnection from '../NoConection/NoConnection';
+import toast, { Toaster } from 'react-hot-toast';
 function View() {
 const {id} = useParams()
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
 const [connection, setConnection] = useState(true)
-
+const [docExists, setDocExists] = useState(true)
 const getData =async()=>{
   setLoading(true)
   if (navigator.onLine) {
@@ -18,10 +19,16 @@ const getData =async()=>{
       setLoading(true)
       const userDoc = doc(db,'employee', id)
       const docm = await getDoc(userDoc)
+      if (docm.exists()) {
+        setObjectData(docm.data())
+   
+      } else {
+        setDocExists(false)
+      }
       setObjectData(docm.data())
       setLoading(false)
     } catch (error) {
-      console.log(error);
+   toast.error(error  )
     }
   }else{
     setConnection(navigator.onLine)
@@ -49,7 +56,8 @@ const viewPanHandler =()=>{
     <>
     {!connection && <NoConnection />}
     {loading && spinner}
-   {connection && <section className='view_continer'>
+    <Toaster position="top-center" reverseOrder={false} />
+   {connection && docExists && <section className='view_continer'>
     <div className='Address_Conatiner'>
       <div><img src={objectData.photo} alt={'img'+objectData.firstName} className='photo_view' /></div>
       <div className='Name_Container'>
@@ -72,7 +80,7 @@ const viewPanHandler =()=>{
   <p>Pin Code : {objectData.tempPinCode}</p>
 </div>
 <div>
-  <h4>Permenet Address</h4>
+  <h4>Permanent Address</h4>
   <p>Suite/Apartment : {objectData.permanentSuite}</p>
   <p>City : {objectData.permanentCity}</p>
   <p>State : {objectData.permanentState}</p>
@@ -90,9 +98,11 @@ const viewPanHandler =()=>{
 {imageHanlder&& <ModalWindow img={imageHanlder} setImageHanlder={setImageHanlder} />}
 <button onClick={viewAdharHandler}>Adhar View</button>
 <button onClick={viewPanHandler}>Pan View</button>
-
 </div>
     </section>}
+    { !docExists&&<div className='error_page'><p>Page not found</p>
+    <h1>404</h1>
+    </div>}
     </>
   )
 }

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { db } from "../../Firebase/Firebase";
 import { useSelector,useDispatch } from "react-redux";
 import { deleteDoc, doc } from "firebase/firestore";
+import { DataLoading } from "../../App";
 import "./table.css";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,6 +17,11 @@ const Tables = () => {
   const [result, setResult] = useState('')
   const [connection, setConnection] = useState(true)
   const dispatch = useDispatch()
+  const dataLoading =useContext(DataLoading)
+ useEffect(() => {
+  setloading(dataLoading)
+ }, [dataLoading])
+ 
     //AllData
  
   const state = useSelector((state) => state);
