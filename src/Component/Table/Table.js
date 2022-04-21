@@ -116,7 +116,7 @@ const deleteEmployee = async(id)=>{
               </td>
               <td data-label="Father Name">{employe.fatherName}</td>
               <td data-label="Post">{employe.post}</td>
-              <td data-label="Phone Number">{employe.nativePhoneNumber}</td>
+              <td data-label="Phone Number">{employe.tempPhoneNumber}</td>
               <td data-label="Delete/Update" >
                 <div className="td_button_container">
                 <button className="button-10"

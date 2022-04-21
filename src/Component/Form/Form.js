@@ -104,6 +104,11 @@ const Form = () => {
     panCard: false,
     photo: false,
   });
+  const [repeatNumber, setRepeatNumber] = useState({
+    repeatTempNumber: false,
+    repeatPremanentNumber: false,
+    repeatNativeNumber: false,
+  });
   const onBlurHandler = (e) => {
     const { name, value } = e.target;
     if (value.trim() === "") {
@@ -113,7 +118,28 @@ const Form = () => {
       setIsValid({ ...isValid, [name]: false });
       setFormSubmit((pre) => ({ ...pre, [name]: false }));
     }
+    if (name === "tempPhoneNumber") {
+      if (value.length !== 10) {
+        setIsValid({ ...isValid, [name]: true });
+        setFormSubmit((pre) => ({ ...pre, [name]: true }));
+      }
+    }
+    if (name === "permanentPhoneNumber") {
+      if (value.length !== 10) {
+        setIsValid({ ...isValid, [name]: true });
+        setFormSubmit((pre) => ({ ...pre, [name]: true }));
+      }
+    }
+    if (name === "nativePhoneNumber") {
+      if (value.length !== 10) {
+        setIsValid({ ...isValid, [name]: true });
+        setFormSubmit((pre) => ({ ...pre, [name]: true }));
+      }
+    }
   };
+
+  //
+
   //validation
   const validation = () => {
     for (const key in isValid) {
@@ -126,28 +152,98 @@ const Form = () => {
       }
     }
   };
+  const gState = useSelector((state) => state);
 
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
-    setFormValue({ ...formValue, [name]: value });
-    if (name === 'tempPhoneNumber') {
-     console.log("firest"); 
-    }
-    if (name === 'permanentPhoneNumber') {
-      console.log("second"); 
-     }
-     if (name === 'nativePhoneNumber') {
-      console.log("third"); 
-     }
+    setFormValue((pre) => ({ ...pre, [name]: value }));
     if (value.trim() === "") {
       setIsValid({ ...isValid, [name]: true });
-      setFormSubmit((pre) => ({ ...pre, [name]: true }));
+      setFormSubmit({ ...isValid, [name]: true });
     } else {
       setIsValid({ ...isValid, [name]: false });
-      setFormSubmit((pre) => ({ ...pre, [name]: false }));
+      setFormSubmit({ ...isValid, [name]: false });
+    }
+    if (name === "tempPhoneNumber") {
+      if (value.length === 10) {
+        if (!id) {
+          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
+            setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
+            setIsValid({ ...isValid, [name]: false });
+            setFormSubmit((pre) => ({ ...pre, [name]: false }));
+          } else {
+            if (
+              gState.gobalData.filter(
+                (cur) => cur[name] == value && cur[name] != value
+              ).length > 0
+            ) {
+              setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
+              setIsValid({ ...isValid, [name]: false });
+              setFormSubmit((pre) => ({ ...pre, [name]: false }));
+            }
+          }
+        }
+        
+      } else {
+        setIsValid({ ...isValid, [name]: false });
+        setFormSubmit((pre) => ({ ...pre, [name]: false }));
+        setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: false }));
+      }
+    }
+    if (name === "permanentPhoneNumber") {
+      if (value.length === 10) {
+        if (!id) {
+          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
+            setRepeatNumber((pre) => ({ ...pre, repeatPremanentNumber: true }));
+            setIsValid({ ...isValid, [name]: false });
+            setFormSubmit((pre) => ({ ...pre, [name]: false }));
+          } else {
+            if (
+              gState.gobalData.filter(
+                (cur) => cur[name] == value && cur[name] != value
+              ).length > 0
+            ) {
+              setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
+              setIsValid({ ...isValid, [name]: false });
+              setFormSubmit((pre) => ({ ...pre, [name]: false }));
+            }
+          }
+        }
+        
+      } else {
+        setIsValid({ ...isValid, [name]: false });
+        setFormSubmit((pre) => ({ ...pre, [name]: false }));
+        setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: false }));
+      }
+    }
+    if (name === "nativePhoneNumber") {
+      if (value.length === 10) {
+        if (!id) {
+          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
+            setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: true }));
+            setIsValid({ ...isValid, [name]: false });
+            setFormSubmit((pre) => ({ ...pre, [name]: false }));
+          } else {
+            if (
+              gState.gobalData.filter(
+                (cur) => cur[name] == value && cur[name] != value
+              ).length > 0
+            ) {
+              setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: true }));
+              setIsValid({ ...isValid, [name]: false });
+              setFormSubmit((pre) => ({ ...pre, [name]: false }));
+            }
+          }
+        }
+        
+      } else {
+        setIsValid({ ...isValid, [name]: false });
+        setFormSubmit((pre) => ({ ...pre, [name]: false }));
+        setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: false }));
+      }
     }
   };
-  const gState = useSelector((state) => state);
+
   const update = async (e) => {
     e.preventDefault();
     const userDoc = doc(db, "employee", id);
@@ -159,7 +255,6 @@ const Form = () => {
         const updatedData = gState.gobalData.map((x) =>
           x.id === id ? { ...formValue, id: id } : x
         );
-
         dispatch({ type: "UPDATE", payload: updatedData });
         setloading(false);
         toast.success("updated Succesfully");
@@ -198,13 +293,14 @@ const Form = () => {
     event.preventDefault();
     validation();
     setConnection(navigator.onLine);
-    let submitValid = true;
+
     if (Object.values(formSubmit).includes(true)) {
-      submitValid = false;
-    }
-    if (!submitValid) {
       return;
     }
+    if (Object.values(repeatNumber).includes(true)) {
+      return;
+    }
+
     upload();
   };
 
@@ -286,8 +382,13 @@ const Form = () => {
               onChange={inputChangeHandler}
               value={formValue.tempPhoneNumber}
               name="tempPhoneNumber"
+              type="number"
             />
-            {isValid.tempPhoneNumber && <p>Entered number must be 10 digit</p>}
+            {repeatNumber.repeatTempNumber === true ? (
+              <p>The number is exists</p>
+            ) : (
+              isValid.tempPhoneNumber && <p>Entered number must be 10 digit</p>
+            )}
           </div>
           <div>
             <input
@@ -296,10 +397,15 @@ const Form = () => {
               onBlur={onBlurHandler}
               onChange={inputChangeHandler}
               name="permanentPhoneNumber"
+              type="number"
               value={formValue.permanentPhoneNumber}
             />
-            {isValid.permanentPhoneNumber && (
-              <p>Entered number must be 10 digit</p>
+            {repeatNumber.repeatPremanentNumber === true ? (
+              <p>The number is exists</p>
+            ) : (
+              isValid.permanentPhoneNumber && (
+                <p>Entered number must be 10 digit</p>
+              )
             )}
           </div>
           <div>
@@ -309,10 +415,15 @@ const Form = () => {
               onBlur={onBlurHandler}
               onChange={inputChangeHandler}
               value={formValue.nativePhoneNumber}
+              type="number"
               name="nativePhoneNumber"
             />
-            {isValid.nativePhoneNumber && (
-              <p>Entered number must be 10 digit</p>
+            {repeatNumber.repeatNativeNumber === true ? (
+              <p>The number is exists</p>
+            ) : (
+              isValid.nativePhoneNumber && (
+                <p>Entered number must be 10 digit</p>
+              )
             )}
           </div>
         </div>
@@ -363,6 +474,7 @@ const Form = () => {
                 onChange={inputChangeHandler}
                 value={formValue.tempPinCode}
                 name="tempPinCode"
+                type="number"
               />
               {isValid.tempPinCode && <p>Enter PinCode</p>}
             </div>
@@ -413,6 +525,7 @@ const Form = () => {
                 onChange={inputChangeHandler}
                 value={formValue.permanentPinCode}
                 name="permanentPinCode"
+                type="number"
               />
               {isValid.permanentPinCode && <p>Enter PinCode</p>}
             </div>
@@ -462,6 +575,7 @@ const Form = () => {
                 onChange={inputChangeHandler}
                 value={formValue.nativePinCode}
                 name="nativePinCode"
+                type="number"
               />
               {isValid.nativePinCode && <p>Enter PinCode</p>}
             </div>
@@ -517,18 +631,19 @@ const Form = () => {
               modalDetail={modalDetail}
               setFormValue={setFormValue}
               formValue={formValue}
+              setFormSubmit={setFormSubmit}
             />
           )}
         </div>
 
         {!id && (
-          <button type="Submit" disabled={false}>
-            Submit
+          <button type="Submit" disabled={loading}>
+          {loading ? 'Loading' : 'Submit'} 
           </button>
         )}
         {id && (
-          <button type="button" onClick={update}>
-            Update
+          <button type="button" onClick={update} disabled={loading}>
+              {loading ? 'Loading' : 'update'} 
           </button>
         )}
       </form>

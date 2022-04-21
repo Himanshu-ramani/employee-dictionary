@@ -18,6 +18,7 @@ const UplaodModal = ({
   modalDetail,
   setFormValue,
   formValue,
+  setFormSubmit
 }) => {
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
@@ -47,7 +48,7 @@ const UplaodModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDetail]);
   useEffect(() => {
-    setFormValue((pre) => ({ ...pre, [modalDetail]: image }));
+    setFormValue({...formValue, [modalDetail]: image });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image]);
 
@@ -62,7 +63,6 @@ const UplaodModal = ({
   const back = () => {
     setviewInput(false);
     setTake(false);
-
     setHideOption(false);
   };
 
@@ -84,6 +84,7 @@ const UplaodModal = ({
     console.log(files[0]);
     const base64 = await toBase64(files[0]);
     setFormValue((pre) => ({ ...pre, [modalDetail]: base64 }));
+    setFormSubmit(pre =>({...pre , [modalDetail] :true}))
   };
 
   return (
