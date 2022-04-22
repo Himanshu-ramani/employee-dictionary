@@ -105,9 +105,9 @@ const Form = () => {
     photo: false,
   });
   const [repeatNumber, setRepeatNumber] = useState({
-    repeatTempNumber: false,
-    repeatPremanentNumber: false,
-    repeatNativeNumber: false,
+    tempPhoneNumber: false,
+    permanentPhoneNumber: false,
+    nativePhoneNumber: false,
   });
   const onBlurHandler = (e) => {
     const { name, value } = e.target;
@@ -153,7 +153,13 @@ const Form = () => {
     }
   };
   const gState = useSelector((state) => state);
-
+  const preNumberArray = [].concat(
+    ...gState.gobalData.map((obj) => [
+      obj.tempPhoneNumber,
+      obj.permanentPhoneNumber,
+      obj.nativePhoneNumber,
+    ])
+  );
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
     setFormValue((pre) => ({ ...pre, [name]: value }));
@@ -164,82 +170,21 @@ const Form = () => {
       setIsValid({ ...isValid, [name]: false });
       setFormSubmit({ ...isValid, [name]: false });
     }
-    if (name === "tempPhoneNumber") {
+    if (
+      name === "tempPhoneNumber" ||
+      "permanentPhoneNumber" ||
+      "nativePhoneNumber"
+    ) {
       if (value.length === 10) {
-        if (!id) {
-          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
-            setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
-            setIsValid({ ...isValid, [name]: false });
-            setFormSubmit((pre) => ({ ...pre, [name]: false }));
-          } else {
-            if (
-              gState.gobalData.filter(
-                (cur) => cur[name] == value && cur[name] != value
-              ).length > 0
-            ) {
-              setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
-              setIsValid({ ...isValid, [name]: false });
-              setFormSubmit((pre) => ({ ...pre, [name]: false }));
-            }
-          }
+        if (preNumberArray.includes(value)) {
+          setRepeatNumber((pre) => ({ ...pre, [name]: true }));
+          setIsValid({ ...isValid, [name]: true });
+          setFormSubmit({ ...isValid, [name]: true });
+        } else {
+          setRepeatNumber((pre) => ({ ...pre, [name]: false }));
+          setIsValid({ ...isValid, [name]: false });
+          setFormSubmit({ ...isValid, [name]: false });
         }
-        
-      } else {
-        setIsValid({ ...isValid, [name]: false });
-        setFormSubmit((pre) => ({ ...pre, [name]: false }));
-        setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: false }));
-      }
-    }
-    if (name === "permanentPhoneNumber") {
-      if (value.length === 10) {
-        if (!id) {
-          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
-            setRepeatNumber((pre) => ({ ...pre, repeatPremanentNumber: true }));
-            setIsValid({ ...isValid, [name]: false });
-            setFormSubmit((pre) => ({ ...pre, [name]: false }));
-          } else {
-            if (
-              gState.gobalData.filter(
-                (cur) => cur[name] == value && cur[name] != value
-              ).length > 0
-            ) {
-              setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: true }));
-              setIsValid({ ...isValid, [name]: false });
-              setFormSubmit((pre) => ({ ...pre, [name]: false }));
-            }
-          }
-        }
-        
-      } else {
-        setIsValid({ ...isValid, [name]: false });
-        setFormSubmit((pre) => ({ ...pre, [name]: false }));
-        setRepeatNumber((pre) => ({ ...pre, repeatTempNumber: false }));
-      }
-    }
-    if (name === "nativePhoneNumber") {
-      if (value.length === 10) {
-        if (!id) {
-          if (gState.gobalData.filter((obj) => obj[name] == value).length > 0) {
-            setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: true }));
-            setIsValid({ ...isValid, [name]: false });
-            setFormSubmit((pre) => ({ ...pre, [name]: false }));
-          } else {
-            if (
-              gState.gobalData.filter(
-                (cur) => cur[name] == value && cur[name] != value
-              ).length > 0
-            ) {
-              setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: true }));
-              setIsValid({ ...isValid, [name]: false });
-              setFormSubmit((pre) => ({ ...pre, [name]: false }));
-            }
-          }
-        }
-        
-      } else {
-        setIsValid({ ...isValid, [name]: false });
-        setFormSubmit((pre) => ({ ...pre, [name]: false }));
-        setRepeatNumber((pre) => ({ ...pre, repeatNativeNumber: false }));
       }
     }
   };
@@ -384,7 +329,7 @@ const Form = () => {
               name="tempPhoneNumber"
               type="number"
             />
-            {repeatNumber.repeatTempNumber === true ? (
+            {repeatNumber.tempPhoneNumber === true ? (
               <p>The number is exists</p>
             ) : (
               isValid.tempPhoneNumber && <p>Entered number must be 10 digit</p>
@@ -400,7 +345,7 @@ const Form = () => {
               type="number"
               value={formValue.permanentPhoneNumber}
             />
-            {repeatNumber.repeatPremanentNumber === true ? (
+            {repeatNumber.permanentPhoneNumber === true ? (
               <p>The number is exists</p>
             ) : (
               isValid.permanentPhoneNumber && (
@@ -418,7 +363,7 @@ const Form = () => {
               type="number"
               name="nativePhoneNumber"
             />
-            {repeatNumber.repeatNativeNumber === true ? (
+            {repeatNumber.nativePhoneNumber === true ? (
               <p>The number is exists</p>
             ) : (
               isValid.nativePhoneNumber && (
@@ -638,12 +583,12 @@ const Form = () => {
 
         {!id && (
           <button type="Submit" disabled={loading}>
-          {loading ? 'Loading' : 'Submit'} 
+            {loading ? "Loading" : "Submit"}
           </button>
         )}
         {id && (
           <button type="button" onClick={update} disabled={loading}>
-              {loading ? 'Loading' : 'update'} 
+            {loading ? "Loading" : "update"}
           </button>
         )}
       </form>
