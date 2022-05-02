@@ -191,7 +191,7 @@ const Form = () => {
 
   const update = async (e) => {
     e.preventDefault();
-    const userDoc = doc(db, "employee", id);
+    const userDoc = doc(db,  gState.userState, id);
     if (navigator.onLine) {
       setConnection(navigator.onLine);
       try {
@@ -233,7 +233,7 @@ const Form = () => {
   };
 
   //submit
-  const userCollectionRef = collection(db, "employee");
+  const userCollectionRef = collection(db, gState.userState);
   const formSubmitHandler = (event) => {
     event.preventDefault();
     validation();

@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import "./Header.css";
 function Header() {
   const dispatch = useDispatch();
+  const state = useSelector((state) => state);
   const searchRef = useRef(null);
   const [sesarchToggle, setSesarchToggle] = useState(false);
   const navigate = useNavigate();
@@ -17,7 +18,28 @@ function Header() {
 
   return (
     <nav className="nav">
-      <div
+     {state.userState === null ?<><ul>
+       <li>
+       <NavLink
+              className={(navData) =>
+                navData.isActive ? "active_link" : "link"
+              }
+              to="/Authentication/login"
+            >
+         Sign In
+            </NavLink>
+       </li>
+       <li>
+       <NavLink
+              className={(navData) =>
+                navData.isActive ? "active_link" : "link"
+              }
+              to="/Authentication/SignUp"
+            >
+         Create Account
+            </NavLink>
+       </li>
+       </ul></> : <div
         className={sesarchToggle ? "nav_content click_content" : "nav_content"}
       >
         <ul
@@ -74,7 +96,7 @@ function Header() {
             </button>
           )}
         </div>
-      </div>
+      </div>}
     </nav>
   );
 }

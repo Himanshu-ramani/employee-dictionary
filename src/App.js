@@ -5,17 +5,17 @@ import { Route, Routes} from 'react-router-dom';
 import TablePage from './Pages/TablePage';
 import AddForm from './Pages/AddForm'
 import View from './Component/View/View';
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import React,{useEffect,useState} from 'react';
 import { collection, getDocs} from "firebase/firestore";
 import {db} from './Firebase/Firebase'
 import LoginPage from './Pages/LoginPage';
 export const DataLoading = React.createContext(false);
 function App() {
-  const userCollectionRef = collection(db, "employee");
   const dispatch =  useDispatch()
   const [loading, setLoading] = useState(false)
-useEffect(() => {
+  const state = useSelector((state) => state);
+  const userCollectionRef = collection(db,state.userState ||'emplyee' );
   async function fetchData (){
     setLoading(true)
     const data = await getDocs(userCollectionRef);
@@ -23,15 +23,19 @@ useEffect(() => {
     )})
     setLoading(false)
   }
+useEffect(() => {
+if (state.userState !== null) {
+  
   fetchData()
+}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
+}, [state.userState])
   return (
     <>
       <Header />
         <Routes >
           <Route path='/' element={<Home />} /> 
-          <Route path='/Authentication' element={<LoginPage />} />
+          <Route path='/Authentication/:userState' element={<LoginPage />} />
           <Route path='/Add-employe' element={<AddForm />} />
           <Route path='/update/:id' element={<AddForm />} />
           <Route path='/Employee-list' element={<DataLoading.Provider value={loading}><TablePage /></DataLoading.Provider>} />

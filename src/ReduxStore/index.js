@@ -22,7 +22,17 @@ const gobalData =(state= [],action) =>{
     
     return state
   }
+  const userState = (state =null ,action)=>{
+    if (action.type === 'SIGNUP') {
+      return( state = action.payload)
+  }
+  if (action.type === 'LOGIN') {
+    return( state = action.payload)
+}
+  
+  return state
+  }
 
-  const store = createStore(combineReducers({gobalData,searchState}))
+  const store = createStore(combineReducers({gobalData,searchState,userState}))
 
 export default store
