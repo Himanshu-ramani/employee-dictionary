@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import React,{useEffect,useState} from 'react';
 import { collection, getDocs} from "firebase/firestore";
 import {db} from './Firebase/Firebase'
+import LoginPage from './Pages/LoginPage';
 export const DataLoading = React.createContext(false);
 function App() {
   const userCollectionRef = collection(db, "employee");
@@ -29,7 +30,8 @@ useEffect(() => {
     <>
       <Header />
         <Routes >
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home />} /> 
+          <Route path='/Authentication' element={<LoginPage />} />
           <Route path='/Add-employe' element={<AddForm />} />
           <Route path='/update/:id' element={<AddForm />} />
           <Route path='/Employee-list' element={<DataLoading.Provider value={loading}><TablePage /></DataLoading.Provider>} />

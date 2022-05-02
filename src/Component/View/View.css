@@ -58,7 +58,9 @@
 }
 .view_name{
    text-transform: capitalize;
+   
 }
+
    .photo_view{
       height: 200px;
       width: 200px;
@@ -72,6 +74,13 @@
    }
    .view_post{
       text-transform: capitalize;
+      margin: 10px;
+   }
+   .Name_Container{
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
    }
    
    .contact_Container{
