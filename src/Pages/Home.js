@@ -1,7 +1,11 @@
 import React from 'react'
 import img from '../Assest/Core-HR-01.png'
 import './Home.css'
+import { useNavigate } from "react-router-dom";
+
 function Home() {
+  const navigate = useNavigate();
+
   return (
    <>
    <section className='home_head'>
@@ -10,9 +14,9 @@ function Home() {
    Employee Data entry App
    </h1>
    <p>Get more done with Online Employee Entry. Now integrated with Online Employee Entry and have flexibility tu access your list anywhere.</p>
-   <button className='home_button'>Get Started</button>
+   <button className='home_button' onClick={()=>{navigate(`/Authentication/SignUp`);}}>Get Started</button>
    </div>
-  <img src={img} className='home_img' />
+  <img src={img} alt='landing img' className='home_img' />
    </section>
    </>
   )

@@ -3,10 +3,10 @@ import {createUserWithEmailAndPassword , signInWithEmailAndPassword} from 'fireb
 import {auth} from '../../Firebase/Firebase'
 import { useDispatch } from "react-redux";
 import {useParams,useNavigate} from 'react-router-dom'
-
+import { Link } from 'react-router-dom';
+import './AuthPage.css'
 function AuthPage() {
     const [dataInput , setDataInput] = useState({email: "", passWord :""})
-    const [userData , setUserData] = useState(null)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,9 +19,9 @@ function AuthPage() {
         e.preventDefault()
         if (userState === 'SignUp') {
              try {
-            const user =await createUserWithEmailAndPassword(auth,dataInput.email , dataInput.passWord).then((userCredential) => {
+            await createUserWithEmailAndPassword(auth,dataInput.email , dataInput.passWord).then((userCredential) => {
                 // Signed in 
-                setUserData(userCredential)
+               
                 console.log(userCredential._tokenResponse.localId);
                 dispatch({ type: "SIGNUP", payload: userCredential._tokenResponse.localId });
                 setTimeout(() => {
@@ -36,9 +36,8 @@ function AuthPage() {
         }
        if (userState === 'login') {
         try {
-            const user =await signInWithEmailAndPassword(auth,dataInput.email , dataInput.passWord).then((userCredential) => {
+            await signInWithEmailAndPassword(auth,dataInput.email , dataInput.passWord).then((userCredential) => {
                 // Signed in 
-                setUserData(userCredential)
                 console.log(userCredential._tokenResponse.localId);
                 dispatch({ type: "SIGNUP", payload: userCredential._tokenResponse.localId });
                 setTimeout(() => {
@@ -55,11 +54,18 @@ function AuthPage() {
        
   return (
     <>
-    <div>
-        <form onSubmit={AuthSubmitHandler}>
+    <div className='form_container' >
+        <form onSubmit={AuthSubmitHandler} className='auth_form'>
+            <h2>{userState ==='SignUp' ? 'Create Account' : 'Login'}</h2>
             <input type='email' placeholder='Email' name='email' onChange={inputChangeHandler} value={dataInput.email} /> 
             <input type='password' placeholder='Password' name='passWord' onChange={inputChangeHandler} value={dataInput.passWord} />
-            <button type='submit'>{'Regsiter'}</button>
+            <button type='submit'>{userState === 'SignUp'&& 'Sign In'} {userState === 'login'&& 'Log In'}</button>
+            {userState === 'SignUp' && <p>Dont't have Account  {<Link 
+              to="/Authentication/login"
+            > Log In</Link>} </p>}
+             {userState === 'login' && <p>Already have Account {<Link
+              to="/Authentication/SignUp"
+            > Sign In</Link>} </p>}
         </form>
     </div>
     </>

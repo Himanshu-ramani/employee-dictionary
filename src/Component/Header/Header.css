@@ -29,6 +29,14 @@
     padding: 4px 8px;
     border-radius: 3px;
 }
+.nav_auth_button{
+    list-style: none;
+    display: flex;
+    margin-right: 20px;
+}
+.nav_auth_button li{
+    margin: 0 10px;
+}
  /* expand search */
 .hide{
     display: none;

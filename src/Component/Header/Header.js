@@ -18,7 +18,7 @@ function Header() {
 
   return (
     <nav className="nav">
-     {state.userState === null ?<><ul>
+     {state.userState === null ?<><ul className="nav_auth_button">
        <li>
        <NavLink
               className={(navData) =>
@@ -47,16 +47,6 @@ function Header() {
             sesarchToggle ? "nav_button_container hide" : "nav_button_container"
           }
         >
-          <li>
-            <NavLink
-              className={(navData) =>
-                navData.isActive ? "active_link" : "link"
-              }
-              to="/"
-            >
-              Home
-            </NavLink>
-          </li>
           <li>
             <NavLink
               className={(navData) =>
