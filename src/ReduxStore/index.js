@@ -29,6 +29,9 @@ const gobalData =(state= [],action) =>{
   if (action.type === 'LOGIN') {
     return( state = action.payload)
 }
+if (action.type === 'LOGOUT') {
+  return( state = action.payload)
+}
   
   return state
   }

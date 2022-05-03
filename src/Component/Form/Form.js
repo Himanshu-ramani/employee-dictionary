@@ -66,7 +66,7 @@ const Form = () => {
     if (id) {
       const getData = async () => {
         setloading(true);
-        const userDoc = doc(db, "employee", id);
+        const userDoc = doc(db, gState.userState, id);
         const docm = await getDoc(userDoc);
         setFormValue({ ...docm.data() });
         setloading(false);

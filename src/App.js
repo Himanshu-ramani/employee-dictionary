@@ -10,11 +10,14 @@ import React,{useEffect,useState} from 'react';
 import { collection, getDocs} from "firebase/firestore";
 import {db} from './Firebase/Firebase'
 import LoginPage from './Pages/LoginPage';
+import { useNavigate } from "react-router-dom";
 export const DataLoading = React.createContext(false);
 function App() {
   const dispatch =  useDispatch()
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
   const state = useSelector((state) => state);
+
   const userCollectionRef = collection(db,state.userState ||'emplyee' );
   async function fetchData (){
     setLoading(true)
@@ -36,10 +39,10 @@ if (state.userState !== null) {
         <Routes >
           <Route path='/' element={<Home />} /> 
           <Route path='/Authentication/:userState' element={<LoginPage />} />
-          <Route path='/Add-employe' element={<AddForm />} />
+        {state.userState &&<> <Route path='/Add-employe' element={<AddForm />} />
           <Route path='/update/:id' element={<AddForm />} />
           <Route path='/Employee-list' element={<DataLoading.Provider value={loading}><TablePage /></DataLoading.Provider>} />
-          <Route path='/View/:id' element={<View />} />
+          <Route path='/View/:id' element={<View />} /> </>}
         </Routes>
         </>
  

@@ -25,6 +25,7 @@ function AuthPage() {
   };
   useEffect(() => {
     setDataInput({ email: "", password: "" })
+    setError({email:'' , password:""})
   }, [userState])
   
 
@@ -55,20 +56,18 @@ const validation =()=>{
     if (userState === "SignUp") {
       try {
           setLoading(true)
-        await createUserWithEmailAndPassword(
+      const user =  await createUserWithEmailAndPassword(
           auth,
           dataInput.email,
-          dataInput.passWord
+          dataInput.password
         ).then((userCredential) => {
           // Signed in
 
-          console.log(userCredential._tokenResponse.localId);
           dispatch({
             type: "SIGNUP",
             payload: userCredential._tokenResponse.localId,
           });
           setLoading(false)
-
           setTimeout(() => {
             navigate("/Employee-list");
           }, 2000);
@@ -80,7 +79,6 @@ const validation =()=>{
             setError(pre=>({...pre , email: ''}))
             toast.error(error.message)
           }
-        console.log(error);
       }
     }
     if (userState === "login") {
@@ -89,10 +87,9 @@ const validation =()=>{
         await signInWithEmailAndPassword(
           auth,
           dataInput.email,
-          dataInput.passWord
+          dataInput.password
         ).then((userCredential) => {
           // Signed in
-          console.log(userCredential._tokenResponse.localId);
           dispatch({
             type: "SIGNUP",
             payload: userCredential._tokenResponse.localId,
@@ -140,8 +137,8 @@ const validation =()=>{
           />
           {error.error !== '' &&<div className="auth_error">{error.password}</div>}
           <button type="submit" disabled={loading}>
-            {userState === "SignUp" && "Sign In"}{" "}
-            {userState === "login" && "Log In"}
+          {loading ? 'Loading...' : <> {userState === "SignUp" && "Sign In"}
+            {userState === "login" && "Log In"} </>}
           </button>
           {userState === "SignUp" && (
             <p>

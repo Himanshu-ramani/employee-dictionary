@@ -2,12 +2,14 @@ import React,{useEffect,useState} from 'react'
 import {useParams} from 'react-router-dom'
 import { db } from '../../Firebase/Firebase';
 import './View.css'
+import { useSelector } from "react-redux";
 import {getDoc,doc, } from 'firebase/firestore'
 import ModalWindow from '../ModalWindow/ModalWindow';
 import NoConnection from '../NoConection/NoConnection';
 import toast, { Toaster } from 'react-hot-toast';
 function View() {
 const {id} = useParams()
+const state = useSelector((state) => state);
 const [objectData, setObjectData] = useState({})
 const [loading, setLoading] = useState(false)
 const [connection, setConnection] = useState(true)
@@ -17,7 +19,7 @@ const getData =async()=>{
   if (navigator.onLine) {
     try {
       setLoading(true)
-      const userDoc = doc(db,'employee', id)
+      const userDoc = doc(db,state.userState, id)
       const docm = await getDoc(userDoc)
       if (docm.exists()) {
         setObjectData(docm.data())

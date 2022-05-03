@@ -34,7 +34,7 @@ const deleteEmployee = async(id)=>{
   if (navigator.onLine) {
   if (window.confirm("Are you sure you want to delete")) {
         setloading(true);
-        const employeDoc = doc(db, "employee", id);
+        const employeDoc = doc(db, state.userState, id);
         try {
         await deleteDoc(employeDoc);
         const newArray = state.gobalData.filter((ele) => {

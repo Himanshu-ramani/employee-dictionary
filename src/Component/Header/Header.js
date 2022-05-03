@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+import { auth } from "../../Firebase/Firebase";
 import "./Header.css";
 function Header() {
   const dispatch = useDispatch();
@@ -15,6 +17,11 @@ function Header() {
   const inputHandler = (e) => {
     dispatch({ type: "SEARCH", payload: searchRef.current.value });
   };
+  const logOutHandler = async()=>{
+  await signOut (auth)
+  navigate('/')
+  dispatch({ type: "LOGOUT", payload:null });
+  }
 
   return (
     <nav className="nav">
@@ -66,6 +73,10 @@ function Header() {
             >
               Employee List
             </NavLink>
+          </li>
+          <li>
+            <span className="link" onClick={logOutHandler}>Log Out</span>
+            
           </li>
         </ul>
         <div className={sesarchToggle ? "search_container" : ""}>
