@@ -26,6 +26,13 @@ function App() {
     )})
     setLoading(false)
   }
+  useEffect(() => {
+   if (state.userState === null) {
+     navigate('/')
+   }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
 useEffect(() => {
 if (state.userState !== null) {
   
@@ -42,7 +49,7 @@ if (state.userState !== null) {
         {state.userState &&<> <Route path='/Add-employe' element={<AddForm />} />
           <Route path='/update/:id' element={<AddForm />} />
           <Route path='/Employee-list' element={<DataLoading.Provider value={loading}><TablePage /></DataLoading.Provider>} />
-          <Route path='/View/:id' element={<View />} /> </>}
+          <Route path='/View/:id' element={<View />} /> </>  }
         </Routes>
         </>
  

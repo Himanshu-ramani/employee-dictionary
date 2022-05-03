@@ -56,13 +56,13 @@ const validation =()=>{
     if (userState === "SignUp") {
       try {
           setLoading(true)
-      const user =  await createUserWithEmailAndPassword(
+        await createUserWithEmailAndPassword(
           auth,
           dataInput.email,
           dataInput.password
         ).then((userCredential) => {
           // Signed in
-
+          localStorage.setItem('user', JSON.stringify( userCredential._tokenResponse.localId));
           dispatch({
             type: "SIGNUP",
             payload: userCredential._tokenResponse.localId,
@@ -94,6 +94,7 @@ const validation =()=>{
             type: "SIGNUP",
             payload: userCredential._tokenResponse.localId,
           });
+          localStorage.setItem('user', JSON.stringify( userCredential._tokenResponse.localId));
           setLoading(false)
           setTimeout(() => {
             navigate("/Employee-list");
@@ -106,7 +107,6 @@ const validation =()=>{
             setError(pre=>({...pre , passWord: ''}))
             toast.error(error.message)
           }
-        
       }
     }
   };

@@ -19,6 +19,7 @@ function Header() {
   };
   const logOutHandler = async()=>{
   await signOut (auth)
+  localStorage.setItem('user', JSON.stringify(null));
   navigate('/')
   dispatch({ type: "LOGOUT", payload:null });
   }

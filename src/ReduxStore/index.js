@@ -22,7 +22,8 @@ const gobalData =(state= [],action) =>{
     
     return state
   }
-  const userState = (state =null ,action)=>{
+  
+  const userState = (state =JSON.parse(window.localStorage.getItem('user')) ,action)=>{
     if (action.type === 'SIGNUP') {
       return( state = action.payload)
   }
