@@ -36,4 +36,10 @@
     border: 1px solid;
     border-radius: 4px;
 }
+.note{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 

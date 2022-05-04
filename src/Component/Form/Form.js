@@ -144,11 +144,11 @@ const Form = () => {
   const validation = () => {
     for (const key in isValid) {
       if (formValue[key].trim() === "") {
-        setFormSubmit((pre) => ({ ...pre, [key]: true }));
+        setFormSubmit((pre) => ({ ...pre, [key]: false }));
         setIsValid((pre) => ({ ...pre, [key]: true }));
       } else {
         setIsValid((pre) => ({ ...pre, [key]: false }));
-        setFormSubmit((pre) => ({ ...pre, [key]: false }));
+        setFormSubmit((pre) => ({ ...pre, [key]: true }));
       }
     }
   };
@@ -234,19 +234,23 @@ const Form = () => {
 
   //submit
   const userCollectionRef = collection(db, gState.userState);
-  const formSubmitHandler = (event) => {
-    event.preventDefault();
+  const formSubmitHandler = (e) => {
+    e.preventDefault();
     validation();
     setConnection(navigator.onLine);
-
-    if (Object.values(formSubmit).includes(true)) {
-      return;
-    }
     if (Object.values(repeatNumber).includes(true)) {
       return;
     }
-
-    upload();
+    console.log(Object.values(formSubmit));
+    if (!Object.values(formSubmit).includes(true)) {
+      return;
+    }
+    if (id) {
+      
+      upload();
+    }else{
+      update()
+    }
   };
 
   //view modal
@@ -580,8 +584,8 @@ const Form = () => {
             />
           )}
         </div>
-
-        {!id && (
+            {<button type='submit'>{loading ? "Loading" :<>{id ? 'Update' : 'Submit'}</> }</button>}
+        {/* {!id && (
           <button type="Submit" disabled={loading}>
             {loading ? "Loading" : "Submit"}
           </button>
@@ -590,7 +594,7 @@ const Form = () => {
           <button type="button" onClick={update} disabled={loading}>
             {loading ? "Loading" : "update"}
           </button>
-        )}
+        )} */}
       </form>
     </>
   );
