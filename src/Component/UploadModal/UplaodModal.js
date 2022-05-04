@@ -18,7 +18,6 @@ const UplaodModal = ({
   modalDetail,
   setFormValue,
   formValue,
-  setFormSubmit
 }) => {
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
@@ -84,7 +83,6 @@ const UplaodModal = ({
     console.log(files[0]);
     const base64 = await toBase64(files[0]);
     setFormValue((pre) => ({ ...pre, [modalDetail]: base64 }));
-    setFormSubmit(pre =>({...pre , [modalDetail] :false}))
   };
 
   return (

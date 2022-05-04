@@ -13,29 +13,6 @@ import { useSelector, useDispatch } from "react-redux";
 const Form = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [formSubmit, setFormSubmit] = useState({
-    firstName: true,
-    fatherName: true,
-    post: true,
-    tempSuite: true,
-    tempCity: true,
-    tempState: true,
-    tempPinCode: true,
-    tempPhoneNumber: true,
-    permanentSuite: true,
-    permanentCity: true,
-    permanentState: true,
-    permanentPinCode: true,
-    permanentPhoneNumber: true,
-    nativeSuite: true,
-    nativeCity: true,
-    nativeState: true,
-    nativePinCode: true,
-    nativePhoneNumber: true,
-    adharCard: true,
-    panCard: true,
-    photo: true,
-  });
   const [state] = useState({
     firstName: "",
     fatherName: "",
@@ -113,27 +90,22 @@ const Form = () => {
     const { name, value } = e.target;
     if (value.trim() === "") {
       setIsValid({ ...isValid, [name]: true });
-      setFormSubmit((pre) => ({ ...pre, [name]: true }));
     } else {
       setIsValid({ ...isValid, [name]: false });
-      setFormSubmit((pre) => ({ ...pre, [name]: false }));
     }
     if (name === "tempPhoneNumber") {
       if (value.length !== 10) {
         setIsValid({ ...isValid, [name]: true });
-        setFormSubmit((pre) => ({ ...pre, [name]: true }));
       }
     }
     if (name === "permanentPhoneNumber") {
       if (value.length !== 10) {
         setIsValid({ ...isValid, [name]: true });
-        setFormSubmit((pre) => ({ ...pre, [name]: true }));
       }
     }
     if (name === "nativePhoneNumber") {
       if (value.length !== 10) {
         setIsValid({ ...isValid, [name]: true });
-        setFormSubmit((pre) => ({ ...pre, [name]: true }));
       }
     }
   };
@@ -144,11 +116,9 @@ const Form = () => {
   const validation = () => {
     for (const key in isValid) {
       if (formValue[key].trim() === "") {
-        setFormSubmit((pre) => ({ ...pre, [key]: false }));
         setIsValid((pre) => ({ ...pre, [key]: true }));
       } else {
         setIsValid((pre) => ({ ...pre, [key]: false }));
-        setFormSubmit((pre) => ({ ...pre, [key]: true }));
       }
     }
   };
@@ -164,11 +134,8 @@ const Form = () => {
     const { name, value } = e.target;
     setFormValue((pre) => ({ ...pre, [name]: value }));
     if (value.trim() === "") {
-      setIsValid({ ...isValid, [name]: true });
-      setFormSubmit({ ...isValid, [name]: true });
     } else {
       setIsValid({ ...isValid, [name]: false });
-      setFormSubmit({ ...isValid, [name]: false });
     }
     if (
       name === "tempPhoneNumber" ||
@@ -179,18 +146,15 @@ const Form = () => {
         if (preNumberArray.includes(value)) {
           setRepeatNumber((pre) => ({ ...pre, [name]: true }));
           setIsValid({ ...isValid, [name]: true });
-          setFormSubmit({ ...isValid, [name]: true });
         } else {
           setRepeatNumber((pre) => ({ ...pre, [name]: false }));
           setIsValid({ ...isValid, [name]: false });
-          setFormSubmit({ ...isValid, [name]: false });
         }
       }
     }
   };
 
   const update = async (e) => {
-    e.preventDefault();
     const userDoc = doc(db,  gState.userState, id);
     if (navigator.onLine) {
       setConnection(navigator.onLine);
@@ -237,20 +201,26 @@ const Form = () => {
   const formSubmitHandler = (e) => {
     e.preventDefault();
     validation();
+////
+
+
+///
     setConnection(navigator.onLine);
     if (Object.values(repeatNumber).includes(true)) {
       return;
     }
-    console.log(Object.values(formSubmit));
-    if (!Object.values(formSubmit).includes(true)) {
-      return;
+    for (const key in isValid) {
+      if (formValue[key].trim() === "") {
+        return
+      }
+    
     }
-    if (id) {
-      
-      upload();
-    }else{
+    if (id) { 
       update()
+    }else{
+      upload()
     }
+
   };
 
   //view modal
@@ -580,21 +550,10 @@ const Form = () => {
               modalDetail={modalDetail}
               setFormValue={setFormValue}
               formValue={formValue}
-              setFormSubmit={setFormSubmit}
             />
           )}
         </div>
-            {<button type='submit'>{loading ? "Loading" :<>{id ? 'Update' : 'Submit'}</> }</button>}
-        {/* {!id && (
-          <button type="Submit" disabled={loading}>
-            {loading ? "Loading" : "Submit"}
-          </button>
-        )}
-        {id && (
-          <button type="button" onClick={update} disabled={loading}>
-            {loading ? "Loading" : "update"}
-          </button>
-        )} */}
+            {<button type='submit' disabled={loading}>{loading ? "Loading" :<>{id ? 'Update' : 'Submit'}</> }</button>}
       </form>
     </>
   );

@@ -55,9 +55,12 @@ function AuthPage() {
     e.preventDefault();
     validation();
    
-    if (Object.values(isValid).includes(false)) {
-      return;
-    }
+    for (const key in dataInput) {
+      if (dataInput[key].trim() === "") {
+        setIsValid((pre) => ({ ...pre, [key]: false }));
+        setError((pre) => ({ ...pre, [key]: `Invalid ${key} ` }));
+        return
+      }}
     if (userState === "SignUp") {
       try {
         setLoading(true);
@@ -150,6 +153,7 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.firstName}
+                required
               />
               <input
                 type="text"
@@ -158,6 +162,7 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.lastName}
+                required
               />
             </>
           )}
@@ -180,6 +185,7 @@ function AuthPage() {
             onChange={inputChangeHandler}
             onBlur={inputBlurHanlder}
             value={dataInput.password}
+            required
           />
           {error.error !== "" && (
             <div className="auth_error">{error.password}</div>
