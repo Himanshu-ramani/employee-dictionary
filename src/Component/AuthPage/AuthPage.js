@@ -14,39 +14,57 @@ import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import "./AuthPage.css";
 function AuthPage() {
+  const { userState } = useParams();
+  // console.log(userState);
   const [dataInput, setDataInput] = useState({ email: "", password: "" ,firstName:"",lastName:""});
-  const [isValid, setIsValid] = useState({ email: false, password: false });
-  const [error, setError] = useState({ email: "", password: "" });
+  const [isValid, setIsValid] = useState({ email: false, password: false , lastName:false ,firstName:false});
+  const [emailError , setEmailError] = useState(false)
+  useEffect(() => {
+    if (userState ==='SignUp') {
+      setDataInput({ email: "", password: "" ,firstName:"",lastName:""})
+      setIsValid({ email: false, password: false , lastName:false ,firstName:false})
+    }else{
+      setDataInput({ email: "", password: "" })
+      setIsValid({ email: false, password: false })
+    }
+  }, [userState])
   const [loading, setLoading] = useState(false);
   const [content , setContent] =useState(false)
+  const [customeEmailError , setCustomeEmailError] = useState('')
+  const [customePasswordError , setCustomePasswordError] = useState('')
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { userState } = useParams();
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
     setDataInput((pre) => ({ ...pre, [name]: value }));
   };
-  useEffect(() => {
-    setDataInput({ email: "", password: "" });
-    setError({ email: "", password: "" });
-  }, [userState]);
 
   const inputBlurHanlder = (e) => {
     const { name, value } = e.target;
     if (value.trim() === "") {
-      setIsValid((pre) => ({ ...pre, [name]: false }));
-      setError((pre) => ({ ...pre, [name]: `Invalid ${name} ` }));
-    } else {
       setIsValid((pre) => ({ ...pre, [name]: true }));
-      setError((pre) => ({ ...pre, [name]: `` }));
+    } else {
+      setIsValid((pre) => ({ ...pre, [name]: false }));
     }
+    if (name === 'email') {
+      var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+
+  if (!pattern.test(value)) {
+    // setIsValid((pre) => ({ ...pre, [name]: true }));
+    setEmailError(true)
+    }else{
+      setEmailError(false)
+    }
+  }
   };
   const validation = () => {
     for (const key in dataInput) {
       if (dataInput[key].trim() === "") {
+        setIsValid((pre) => ({ ...pre, [key]: true }));
+      }else{
         setIsValid((pre) => ({ ...pre, [key]: false }));
-        setError((pre) => ({ ...pre, [key]: `Invalid ${key} ` }));
       }
     }
   };
@@ -57,8 +75,7 @@ function AuthPage() {
    
     for (const key in dataInput) {
       if (dataInput[key].trim() === "") {
-        setIsValid((pre) => ({ ...pre, [key]: false }));
-        setError((pre) => ({ ...pre, [key]: `Invalid ${key} ` }));
+        setIsValid((pre) => ({ ...pre, [key]: true }));
         return
       }}
     if (userState === "SignUp") {
@@ -71,6 +88,7 @@ function AuthPage() {
           dataInput.email,
           dataInput.password
         );
+        await user.user.sendEmailVerification({url : 'http://localhost:3000'})
         toast.success('Account Created Succesfully')
         console.log(user);
         setContent(true)
@@ -91,12 +109,12 @@ function AuthPage() {
         }, 1000);
       } catch (error) {
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-          setError((pre) => ({ ...pre, email: "Email is already in use" }));
+          setCustomeEmailError('Eamil already exist')
         } else {
-          setError((pre) => ({ ...pre, email: "" }));
+          //
+          setCustomeEmailError('')
           toast.error(error.message);
         }
-        console.log(error);
         setLoading(false);
       }
     }
@@ -127,10 +145,12 @@ function AuthPage() {
 
       } catch (error) {
         if (error.message === "Firebase: Error (auth/wrong-password).") {
-          setError((pre) => ({ ...pre, passWord: "Wrong Password" }));
-        } else {
-          setError((pre) => ({ ...pre, passWord: "" }));
+        setCustomePasswordError('Worng Password')
+        }  else {
+          //
           toast.error(error.message);
+        setCustomePasswordError('')
+
         }
         setLoading(false);
       }
@@ -153,8 +173,9 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.firstName}
-                required
+                // required
               />
+              {isValid.firstName && <div className="auth_error">Please enter First Name</div>}
               <input
                 type="text"
                 name="lastName"
@@ -162,22 +183,20 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.lastName}
-                required
-              />
+                // required
+              />{isValid.lastName && <div className="auth_error">Please enter Last Name</div>}
             </>
           )}
           <input
             type="email"
             placeholder="Email"
             name="email"
-            required
+            // required
             onChange={inputChangeHandler}
             onBlur={inputBlurHanlder}
             value={dataInput.email}
           />
-          {error.error !== "" && (
-            <div className="auth_error">{error.email}</div>
-          )}
+          {customeEmailError !== ''? <div className="auth_error">{customeEmailError}</div> : isValid.email ? <div className="auth_error">Please enter Email</div> : emailError && <div className="auth_error">Enter an email address in the correct format, like name@example.com</div>}
           <input
             type="password"
             placeholder="Password"
@@ -185,11 +204,9 @@ function AuthPage() {
             onChange={inputChangeHandler}
             onBlur={inputBlurHanlder}
             value={dataInput.password}
-            required
+            // required
           />
-          {error.error !== "" && (
-            <div className="auth_error">{error.password}</div>
-          )}
+          {customePasswordError !=='' ?<div>{customePasswordError}</div>: isValid.password && <div className="auth_error">Please enter Password</div>}
           <button type="submit">
             {loading ? (
               "Loading..."
@@ -203,13 +220,13 @@ function AuthPage() {
           {userState === "login" && (
             <p>
               Don't have Account{" "}
-              {<Link to="/Authentication/login"> Sign up</Link>}{" "}
+              {<Link to="/Authentication/SignUp"> Sign up</Link>}{" "}
             </p>
           )}
           {userState === "SignUp" && (
             <p>
               Already have Account{" "}
-              {<Link to="/Authentication/SignUp"> Log in</Link>}{" "}
+              {<Link to="/Authentication/login"> Log in</Link>}{" "}
             </p>
           )}
         </form> : <h1 className="note">Verify your Email!</h1>}

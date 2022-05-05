@@ -11,6 +11,7 @@ import { collection, getDocs} from "firebase/firestore";
 import {db} from './Firebase/Firebase'
 import LoginPage from './Pages/LoginPage';
 import { useNavigate } from "react-router-dom";
+import LoginVerification from './Pages/LoginVerification';
 export const DataLoading = React.createContext(false);
 function App() {
   const dispatch =  useDispatch()
@@ -26,12 +27,12 @@ function App() {
     )})
     setLoading(false)
   }
-  useEffect(() => {
-   if (state.userState === null) {
-     navigate('/')
-   }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // useEffect(() => {
+  //  if (state.userState === null) {
+  //    navigate('/')
+  //  }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
   
 useEffect(() => {
 if (state.userState !== null) {
@@ -46,6 +47,7 @@ if (state.userState !== null) {
         <Routes >
           <Route path='/' element={<Home />} /> 
           <Route path='/Authentication/:userState' element={<LoginPage />} />
+          <Route path='/logging' element={<LoginVerification />} />
         {state.userState &&<> <Route path='/Add-employe' element={<AddForm />} />
           <Route path='/update/:id' element={<AddForm />} />
           <Route path='/Employee-list' element={<DataLoading.Provider value={loading}><TablePage /></DataLoading.Provider>} />
