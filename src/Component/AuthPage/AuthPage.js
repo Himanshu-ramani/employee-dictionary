@@ -83,24 +83,25 @@ function AuthPage() {
         setLoading(true);
   const userCollectionRef = collection(db, 'usersList');
       await addDoc(userCollectionRef,dataInput );
-        const user = await createUserWithEmailAndPassword(
+         await createUserWithEmailAndPassword(
           auth,
           dataInput.email,
           dataInput.password
-        );
-        await user.user.sendEmailVerification({url : 'http://localhost:3000'})
+        ); 
+      
         toast.success('Account Created Succesfully')
-        console.log(user);
+
         setContent(true)
         await updateProfile (auth.currentUser,{
           displayName: dataInput.firstName +' '+ dataInput.lastName
         })
+        console.log(auth.currentUser);
       await  sendEmailVerification(auth.currentUser)
         .then(() => {
        
         });
         setLoading(false);
-        console.log(user);
+
         setContent(false)
 
         setTimeout(() => {
@@ -108,10 +109,15 @@ function AuthPage() {
           navigate("/Authentication/login");
         }, 1000);
       } catch (error) {
+ 
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
           setCustomeEmailError('Eamil already exist')
-        } else {
+        }if(error.message === "Firebase: Password should be at least 6 characters (auth/weak-password)."){
+        setCustomePasswordError('Weak password (Password should be at least 6 characters)')
+        }
+         else {
           //
+          setCustomePasswordError('')
           setCustomeEmailError('')
           toast.error(error.message);
         }
@@ -126,7 +132,8 @@ function AuthPage() {
           dataInput.email,
           dataInput.password
         )
-        if (user.emailVerified) {
+    
+        if (!user.user.emailVerified) {
           toast.error('verify your email')
             return
         }
@@ -134,10 +141,8 @@ function AuthPage() {
             type: "SIGNUP",
             payload: user._tokenResponse.localId,
           });
-          localStorage.setItem(
-            "user",
-            JSON.stringify(user._tokenResponse.localId)
-          );
+        
+          document.cookie = user._tokenResponse.localId
           setLoading(false)
             setTimeout(() => {
             navigate("/Employee-list");
@@ -206,7 +211,7 @@ function AuthPage() {
             value={dataInput.password}
             // required
           />
-          {customePasswordError !=='' ?<div>{customePasswordError}</div>: isValid.password && <div className="auth_error">Please enter Password</div>}
+          {customePasswordError !=='' ?<div className="auth_error">{customePasswordError}</div>: isValid.password && <div className="auth_error">Please enter Password</div>}
           <button type="submit">
             {loading ? (
               "Loading..."

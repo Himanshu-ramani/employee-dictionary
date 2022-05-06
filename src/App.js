@@ -10,13 +10,14 @@ import React,{useEffect,useState} from 'react';
 import { collection, getDocs} from "firebase/firestore";
 import {db} from './Firebase/Firebase'
 import LoginPage from './Pages/LoginPage';
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import LoginVerification from './Pages/LoginVerification';
 export const DataLoading = React.createContext(false);
 function App() {
   const dispatch =  useDispatch()
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate();
+  const {pathname} = useLocation();
+  const navigate = useNavigate()
   const state = useSelector((state) => state);
 
   const userCollectionRef = collection(db,state.userState ||'emplyee' );
@@ -27,12 +28,14 @@ function App() {
     )})
     setLoading(false)
   }
-  // useEffect(() => {
-  //  if (state.userState === null) {
-  //    navigate('/')
-  //  }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
+  useEffect(() => {
+   if (state.userState === null ) {
+     if (pathname !== '/Authentication/login') {
+       navigate('/')
+     }
+   }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
 useEffect(() => {
 if (state.userState !== null) {
