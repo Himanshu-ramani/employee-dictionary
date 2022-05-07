@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import "./AuthPage.css";
 function AuthPage() {
   const { userState } = useParams();
-  // console.log(userState);
+
   const [dataInput, setDataInput] = useState({ email: "", password: "" ,firstName:"",lastName:""});
   const [isValid, setIsValid] = useState({ email: false, password: false , lastName:false ,firstName:false});
   const [emailError , setEmailError] = useState(false)
@@ -52,7 +52,7 @@ function AuthPage() {
       var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 
   if (!pattern.test(value)) {
-    // setIsValid((pre) => ({ ...pre, [name]: true }));
+ 
     setEmailError(true)
     }else{
       setEmailError(false)
@@ -178,7 +178,6 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.firstName}
-                // required
               />
               {isValid.firstName && <div className="auth_error">Please enter First Name</div>}
               <input
@@ -188,7 +187,6 @@ function AuthPage() {
                 onChange={inputChangeHandler}
                 onBlur={inputBlurHanlder}
                 value={dataInput.lastName}
-                // required
               />{isValid.lastName && <div className="auth_error">Please enter Last Name</div>}
             </>
           )}
@@ -196,7 +194,6 @@ function AuthPage() {
             type="email"
             placeholder="Email"
             name="email"
-            // required
             onChange={inputChangeHandler}
             onBlur={inputBlurHanlder}
             value={dataInput.email}
@@ -209,7 +206,6 @@ function AuthPage() {
             onChange={inputChangeHandler}
             onBlur={inputBlurHanlder}
             value={dataInput.password}
-            // required
           />
           {customePasswordError !=='' ?<div className="auth_error">{customePasswordError}</div>: isValid.password && <div className="auth_error">Please enter Password</div>}
           <button type="submit">
