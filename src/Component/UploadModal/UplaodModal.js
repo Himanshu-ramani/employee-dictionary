@@ -104,14 +104,14 @@ const UplaodModal = ({
           <div className="Select_container">
             <div>
               <FontAwesomeIcon icon={faFileImage} />
-              <p className="heading_icon">Chose from Gallary</p>
+              <p className="heading_icon">Chose from Gallery</p>
               <button type="button" className="button-16" onClick={viewGallary}>
                 Chose
               </button>
             </div>
             <div>
               <FontAwesomeIcon icon={faCameraAlt} />
-              <p className="heading_icon">Take from camrea</p>
+              <p className="heading_icon">Take from Camrea</p>
               <button type="button" className="button-16" onClick={viewCapute}>
                 Take
               </button>

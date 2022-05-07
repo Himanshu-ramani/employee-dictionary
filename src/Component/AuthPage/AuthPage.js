@@ -150,7 +150,7 @@ function AuthPage() {
 
       } catch (error) {
         if (error.message === "Firebase: Error (auth/wrong-password).") {
-        setCustomePasswordError('Worng Password')
+        setCustomePasswordError('Wrong Password')
         }  else {
           //
           toast.error(error.message);

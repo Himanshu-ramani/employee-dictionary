@@ -19,7 +19,6 @@ function App() {
   const {pathname} = useLocation();
   const navigate = useNavigate()
   const state = useSelector((state) => state);
-
   const userCollectionRef = collection(db,state.userState ||'emplyee' );
   async function fetchData (){
     setLoading(true)
