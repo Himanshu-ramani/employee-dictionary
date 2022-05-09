@@ -1,7 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 .nav{
     display: flex;
-    justify-content:flex-end;
+    justify-content:space-between;
     background-color: #7549F6;
+}
+.nav h3{
+    color: #fff;
+    font-family: 'Dancing Script', cursive;
+    margin:20px;
+}
+.user_name{
+    text-transform: capitalize;
+    color: #fff;
 }
 .nav_content{
     display: flex;
@@ -57,23 +67,51 @@
     display: flex;
     justify-content: center;
 }
+.container{
+    display: none;
+}
 @media only screen and (max-width: 668px) {
     .nav_content{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
+    display: none;
     }
     .nav_content ul *{
         margin: 0;
-        
+      
     }
-  .nav_button_container{
-      display: flex;
-      justify-content: space-between;
-      padding: 0;
-        width: 100%;
+
+  .nav_auth_button{
+      display: none;
+  }
+  /* hemburg */
+  .container {
+    display: inline-block;
+    cursor: pointer;
+    padding: 7px;
   }
   
+  .bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: 0.4s;
+  }
+  
+  /* Rotate first bar */
+  .change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
+    transform: rotate(-45deg) translate(-9px, 6px) ;
+  }
+  
+  /* Fade out the second bar */
+  .change .bar2 {
+    opacity: 0;
+  }
+  
+  /* Rotate last bar */
+  .change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
+    transform: rotate(45deg) translate(-8px, -8px) ;
+  }
+ 
 }

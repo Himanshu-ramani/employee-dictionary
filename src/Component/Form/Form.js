@@ -241,7 +241,7 @@ const Form = () => {
   };
   //spiner
 
-  const spinner = <div className="spinner"></div>;
+  const spinner = <div class="spinner"></div>
 
   return (
     <>

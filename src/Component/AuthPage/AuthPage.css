@@ -28,13 +28,25 @@
     margin: 0;
    margin-bottom: 2px;
 }
-.auth_form button{
+.auth_button{
     width: 74%;
     padding: 6px;
     color: #fff;
     background: #7549F6;
     border: 1px solid;
     border-radius: 4px;
+}
+.auth_button_google {
+    width: 74%;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+.google_icon{
+    height: 15px;
+    margin: 0;
 }
 .note{
     position: absolute;
