@@ -18,7 +18,7 @@
 .modal_profile_img{
     margin: auto;
     width: 30%;
-    /* height:30% ; */
+ 
 }
 #profile_Add{
     display: none;
@@ -41,12 +41,11 @@ h1{
     margin: 10px;
 }
 .cam_button_container{
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: center !important;
 }
-.cam_button_container *{
-    margin: 0 10px;
-}
+
 /* CSS */
 .button-16 {
     background-color: #e7e7e7;
@@ -66,6 +65,7 @@ h1{
     touch-action: manipulation;
     white-space: pre;
   }
+ 
   
   .button-16:hover {
     border-color: #dadce0;
@@ -80,30 +80,13 @@ h1{
 
 @media only screen and (max-width: 600px) {
     .upload_modal_container{
-        width: 95% !important;
+        width: 90%;
     }
     .modal_Cancel{
-        top: 13px;
-        right: -128px;
+        
+        top: 10px;
+        right: -122px;
     }
-    .Select_container div{
-        display: block;
-    }
-    /*  */
-    .gallary_conatiner img{
-         display: block;
-         margin-bottom: 20px;
-    }
-    .cam{
-        display: block;
-    }
-    .upload_button_container div{
-        display: flex;
-        justify-content: center;
-    }
-    .upload_button_container div button{
-        width: 90%;
-        margin: 5px;
-    }
+   
 
 }

@@ -7,30 +7,33 @@
     z-index: 10;
     background-color: rgba(0,0,0,0.5); /*dim the background*/
 }
-.Modal_img{
-    position: relative;
-    height: 200px;
-    width: 300px;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* z-index: 12; */
-}
-.modal_contanier{
-    background-color: white;
-    position: absolute;
+.View_modal{
+    background: #fff;
+    position: fixed;
     top: 50%;
     left: 50%;
+    width: 50%;
+    height: 40%;
+    z-index: 11;
     transform: translate(-50%, -50%);
-    width: 500px;
-    height: 300px;
-    z-index: 12;
-    border-radius: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.modal_close{
-    position: relative;
-    margin: auto;
-    top: 69px;
-    left: 120px;
-    z-index: 13;
+.View_image{
+    height: 80%;
 }
+.close_button_modal{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+@media screen and (max-width: 767px) {
+    .View_modal{
+        width: 95%;
+    }
+}
+
+
+  

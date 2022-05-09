@@ -7,9 +7,9 @@ const ModalWindow = ({img,setImageHanlder}) => {
   return (
       <>
     <div className='Overlay' ></div>
-    <div className='modal_contanier'>
-        <img src={img} className='Modal_img' />
-        <button className='modal_close' onClick={closeModal}>close</button>
+    <div className='View_modal'>
+      <button className='close_button_modal' onClick={closeModal}>X</button>
+      <img src={img} alt='document' className='View_image' />
     </div>
     </>
   )

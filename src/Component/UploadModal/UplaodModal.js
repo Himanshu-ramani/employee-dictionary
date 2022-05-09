@@ -8,7 +8,7 @@ import { faCameraAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
 
 const videoConstraints = {
-  width: 220,
+  width: 200,
   height: 200,
   facingMode: "user",
 };

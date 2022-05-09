@@ -70,6 +70,9 @@
    .name_post{
       margin: 0;
    }
+   .view_button_container{
+      width: 100%
+   }
    .photo_view{
       margin: auto;
    }

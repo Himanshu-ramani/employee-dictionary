@@ -7,7 +7,6 @@ function Header() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
   const navigate = useNavigate();
-
   const logOutHandler = async () => {
     await signOut(auth);
     document.cookie = null;
@@ -22,7 +21,7 @@ const hemburgHanlder =(e)=>{
       <h3>Employee Entry App</h3>
       {state.userState === null ? (
         <>
-          <ul className="nav_auth_button" id="myLinks">
+          <ul className="nav_auth_button ">
             <li>
               <NavLink
                 className={(navData) =>
@@ -67,11 +66,6 @@ const hemburgHanlder =(e)=>{
           </ul>
         </div>
       )}
-      <div className="container" onClick={hemburgHanlder}>
-  <div className="bar1"></div>
-  <div className="bar2"></div>
-  <div className="bar3"></div>
-</div>
     </nav>
   );
 }

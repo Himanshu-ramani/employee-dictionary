@@ -100,34 +100,14 @@ td {
     display: inline;
     border: 0;
   }
-
-  .profile_row {
-    align-items: center;
+  .table_nav_conatiner{
+    display: flex;
   }
+
 
   .table caption {
     display: none;
     font-size: 1.3em;
-  }
-
-  .table_nav {
-    margin-top: 5px;
-  }
-
-  .table_nav input {
-    width: 50%;
-  }
-
-  .table_nav td {
-    padding: 0;
-  }
-
-  .table_nav h3 {
-    display: none;
-  }
-
-  .thead {
-    display: none !important;
   }
 
   .table tr {
@@ -164,10 +144,16 @@ td {
     align-items: center;
   }
 
-  .table_nav,
-  .table_nav {
-    display: block;
-  }
+  
+.last{
+  display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+  /* table nav */
+.thead{
+  display: none !important;
+}
 }
 
 /* Rsponsieve */

@@ -126,8 +126,8 @@ const Tables = () => {
       {connection && !!!result && (
         <table className="table">
           <thead>
-            <tr colSpan="5" className="table_nav">
-              <td colSpan="5">
+            <tr colSpan="5" >
+              <td colSpan="5" className="table_nav_conatiner">
                 <nav className="table_nav">
                   {!toggleSearch ? (
                     <h3>Employee List</h3>
@@ -191,7 +191,7 @@ const Tables = () => {
                   <td data-label="Father Name">{employe.fatherName}</td>
                   <td data-label="Post">{employe.post}</td>
                   <td data-label="Phone Number">{employe.tempPhoneNumber}</td>
-                  <td data-label="Delete/Update">
+                  <td data-label="Delete/Update" className="last">
                     <div className="td_button_container">
                       <button
                         className="button-38"

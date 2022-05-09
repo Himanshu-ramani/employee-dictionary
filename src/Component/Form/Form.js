@@ -544,6 +544,7 @@ const Form = () => {
               <></>
             )}
           </div>
+        </div>
           {viewModal && (
             <UplaodModal
               setviewModal={setviewModal}
@@ -552,7 +553,6 @@ const Form = () => {
               formValue={formValue}
             />
           )}
-        </div>
             {<button type='submit' disabled={loading}>{loading ? "Loading" :<>{id ? 'Update' : 'Submit'}</> }</button>}
       </form>
     </>
