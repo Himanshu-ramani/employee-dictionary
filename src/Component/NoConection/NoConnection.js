@@ -1,9 +1,7 @@
-import React from 'react'
-import './NoConnection.css'
+import React from "react";
+import "./NoConnection.css";
 const NoConnection = () => {
-  return (
-    <div className='connection'>No internet Connection</div>
-  )
-}
+  return <div className="connection">No internet Connection</div>;
+};
 
-export default NoConnection
+export default NoConnection;

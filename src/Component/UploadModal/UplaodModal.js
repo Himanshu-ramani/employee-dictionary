@@ -27,27 +27,27 @@ const UplaodModal = ({
     setImage(imageSrc);
   };
   const [viewInput, setviewInput] = useState(false);
-  const [profileImg, setProfileImg] = useState(null)
+  const [profileImg, setProfileImg] = useState(null);
   const [take, setTake] = useState(false);
   const [hideOption, setHideOption] = useState(false);
   const [heading, setHeading] = useState("");
   useEffect(() => {
     if (modalDetail === "photo") {
       setHeading("Your Photo");
-      setProfileImg(profile)
+      setProfileImg(profile);
     }
     if (modalDetail === "panCard") {
       setHeading("Your Pan Card");
-      setProfileImg(idProfile)
+      setProfileImg(idProfile);
     }
     if (modalDetail === "adharCard") {
       setHeading("Your Adhar Card");
-      setProfileImg(idProfile)
+      setProfileImg(idProfile);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDetail]);
   useEffect(() => {
-    setFormValue({...formValue, [modalDetail]: image });
+    setFormValue({ ...formValue, [modalDetail]: image });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image]);
 
@@ -89,7 +89,7 @@ const UplaodModal = ({
     <div>
       <div className="Overlay"></div>{" "}
       <section className="upload_modal_container">
-      <button
+        <button
           type="button"
           className="modal_Cancel"
           onClick={(e) => {
@@ -99,7 +99,7 @@ const UplaodModal = ({
           X
         </button>
         <h1>Upload {heading}</h1>
-     
+
         {!hideOption && (
           <div className="Select_container">
             <div>
@@ -157,7 +157,6 @@ const UplaodModal = ({
           <div className="video">
             {" "}
             {image === "" ? (
-            
               <Webcam
                 audio={false}
                 height={200}
@@ -166,12 +165,11 @@ const UplaodModal = ({
                 width={220}
                 videoConstraints={videoConstraints}
               />
-      
             ) : (
               <img src={image} alt="capture img" />
             )}
             {image !== "" ? (
-              <div >
+              <div>
                 <button
                   className="button-16"
                   onClick={(e) => {
@@ -192,13 +190,10 @@ const UplaodModal = ({
                   className="button-16"
                 >
                   Capture
-                </button>
-                <div>
-                  {" "}
-                  <button type="button" className="button-16" onClick={back}>
-                    back
-                  </button>{" "}
-                </div>
+                </button>{" "}
+                <button type="button" className="button-16" onClick={back}>
+                  back
+                </button>{" "}
               </div>
             )}
           </div>

@@ -73,7 +73,7 @@ function View() {
               <p className="view_post"> {objectData.post}</p>
             </div>
           </div>
-          
+
           <div>
             <h4>Contact Number</h4>
             <p>Personal Number : {objectData.tempPhoneNumber}</p>
@@ -81,38 +81,39 @@ function View() {
             <p>Native Number: {objectData.nativePhoneNumber}</p>
           </div>
           <div className="Address_container">
-          <div>
-            <h4>Temporary Address</h4>
-            <p>Suite/Apartment : {objectData.tempSuite}</p>
-            <p>City : {objectData.tempCity}</p>
-            <p>State : {objectData.tempState}</p>
-            <p>Pin Code : {objectData.tempPinCode}</p>
+            <div>
+              <h4>Temporary Address</h4>
+              <p>Suite/Apartment : {objectData.tempSuite}</p>
+              <p>City : {objectData.tempCity}</p>
+              <p>State : {objectData.tempState}</p>
+              <p>Pin Code : {objectData.tempPinCode}</p>
+            </div>
+            <div>
+              <h4>Permanent Address</h4>
+              <p>Suite/Apartment : {objectData.permanentSuite}</p>
+              <p>City : {objectData.permanentCity}</p>
+              <p>State : {objectData.permanentState}</p>
+              <p>Pin Code : {objectData.permanentPinCode}</p>
+            </div>
+            <div>
+              <h4>Native Address</h4>
+              <p>Suite/Apartment : {objectData.nativeSuite}</p>
+              <p>City : {objectData.nativeCity}</p>
+              <p>State : {objectData.nativeState}</p>
+              <p>Pin Code : {objectData.nativePinCode}</p>
+            </div>
           </div>
-          <div>
-            <h4>Permanent Address</h4>
-            <p>Suite/Apartment : {objectData.permanentSuite}</p>
-            <p>City : {objectData.permanentCity}</p>
-            <p>State : {objectData.permanentState}</p>
-            <p>Pin Code : {objectData.permanentPinCode}</p>
-          </div>
-          <div>
-            <h4>Native Address</h4>
-            <p>Suite/Apartment : {objectData.nativeSuite}</p>
-            <p>City : {objectData.nativeCity}</p>
-            <p>State : {objectData.nativeState}</p>
-            <p>Pin Code : {objectData.nativePinCode}</p>
-          </div>
-          </div>
-            <h4>Document</h4>
-            {imageHanlder && (
-              <ModalWindow
-                img={imageHanlder}
-                setImageHanlder={setImageHanlder}
-              />
-            )}
+          <h4>Document</h4>
+          {imageHanlder && (
+            <ModalWindow img={imageHanlder} setImageHanlder={setImageHanlder} />
+          )}
           <div className="view_button_container">
-            <button onClick={viewAdharHandler} className='button-38'>Adhar View</button>
-            <button onClick={viewPanHandler} className='button-38'>Pan View</button>
+            <button onClick={viewAdharHandler} className="button-38">
+              Adhar View
+            </button>
+            <button onClick={viewPanHandler} className="button-38">
+              Pan View
+            </button>
           </div>
         </section>
       )}

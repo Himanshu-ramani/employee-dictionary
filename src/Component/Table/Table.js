@@ -14,18 +14,22 @@ import {
   faAdd,
   faClose,
   faArrowDown,
-  faArrowUp
+  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
 import NoConnection from "../NoConection/NoConnection";
+import ConfirmModal from "../ConfirmModal/ConfirmModal";
 const Tables = () => {
   const [data, setData] = useState([]);
   const [loading, setloading] = useState(false);
   const [result, setResult] = useState("");
   const [connection, setConnection] = useState(true);
   const [toggleSearch, setToggleSerach] = useState(false);
+  const [confirmWindow, setConfirmWindow] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleteObjId, setDeleteObjId] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dataLoading = useContext(DataLoading);
@@ -40,27 +44,29 @@ const Tables = () => {
     setData(state.gobalData);
   }, [state.gobalData]);
 
-  const deleteEmployee = async (id) => {
-    if (navigator.onLine) {
-      if (window.confirm("Are you sure you want to delete")) {
-        setloading(true);
-        const employeDoc = doc(db, state.userState, id);
-        try {
-          await deleteDoc(employeDoc);
-          const newArray = state.gobalData.filter((ele) => {
-            return ele.id !== id;
-          });
-          setloading(false);
-          dispatch({ type: "DELETE", payload: newArray });
-          toast.success("Successfully delete!");
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    } else {
-      setConnection(navigator.onLine);
-    }
+  const deleteEmployee = (id) => {
+    setDeleteObjId(id);
+    setConfirmWindow(true);
   };
+  useEffect(async () => {
+    if (deleteConfirm) {
+      setloading(true);
+      const employeDoc = doc(db, state.userState, deleteObjId);
+      try {
+        await deleteDoc(employeDoc);
+        const newArray = state.gobalData.filter((ele) => {
+          return ele.id !== deleteObjId;
+        });
+        setloading(false);
+        dispatch({ type: "DELETE", payload: newArray });
+        toast.success("Successfully delete!");
+        setDeleteObjId(null);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteConfirm]);
 
   const searchHandler = (e) => {
     if (e.target.value !== "") {
@@ -80,26 +86,26 @@ const Tables = () => {
   };
   //spiner
   const spinner = <div className="spinnerB"></div>;
-    //sorting
-    const [icon, setIcon] = useState(false);
-    const [order, setOreder] = useState("ASC");
-    const sorting = (col) => {
-      setIcon((preState) => !preState);
-      if (order === "ASC") {
-        const sorted = [...state.gobalData].sort((a, b) =>
-          a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
-        );
-        setData(sorted)
-        setOreder("DSC");
-      }
-      if (order === "DSC") {
-        const sorted = [...state.gobalData].sort((a, b) =>
-          a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
-        );
-        setData(sorted)
-        setOreder("ASC");
-      }
-    };
+  //sorting
+  const [icon, setIcon] = useState(false);
+  const [order, setOreder] = useState("ASC");
+  const sorting = (col) => {
+    setIcon((preState) => !preState);
+    if (order === "ASC") {
+      const sorted = [...state.gobalData].sort((a, b) =>
+        a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
+      );
+      setData(sorted);
+      setOreder("DSC");
+    }
+    if (order === "DSC") {
+      const sorted = [...state.gobalData].sort((a, b) =>
+        a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
+      );
+      setData(sorted);
+      setOreder("ASC");
+    }
+  };
   //pagination
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,15 +124,20 @@ const Tables = () => {
   const perPage = (post) => {
     setPostPerPage(post);
   };
- 
+
   return (
     <>
       {!connection && <NoConnection />}
-      {result !== "" && result}
-      {connection && !!!result && (
+      {confirmWindow && (
+        <ConfirmModal
+          setConfirmWindow={setConfirmWindow}
+          setDeleteConfirm={setDeleteConfirm}
+        />
+      )}
+      {connection && (
         <table className="table">
           <thead>
-            <tr colSpan="5" >
+            <tr colSpan="5">
               <td colSpan="5" className="table_nav_conatiner">
                 <nav className="table_nav">
                   {!toggleSearch ? (
@@ -134,10 +145,7 @@ const Tables = () => {
                   ) : (
                     <>
                       <FontAwesomeIcon icon={faSearch} />{" "}
-                      <input
-                        type="text"
-                        onChange={searchHandler}
-                      />
+                      <input type="text" onChange={searchHandler} />
                     </>
                   )}
                   <ul>
@@ -146,7 +154,6 @@ const Tables = () => {
                         setToggleSerach((pre) => !pre);
                       }}
                     >
-                      {" "}
                       {!toggleSearch ? (
                         <FontAwesomeIcon icon={faSearch} className="icon" />
                       ) : (
@@ -154,7 +161,6 @@ const Tables = () => {
                       )}
                     </li>
                     <li>
-                      {" "}
                       <FontAwesomeIcon
                         icon={faAdd}
                         className="icon"
@@ -168,11 +174,14 @@ const Tables = () => {
               </td>
             </tr>
             <tr className="thead">
-              <th onClick={() => sorting("firstName")}>Name  {icon === true ? (
-                <FontAwesomeIcon icon={faArrowDown} />
-              ) : (
-                <FontAwesomeIcon icon={faArrowUp} />
-              )}</th>
+              <th onClick={() => sorting("firstName")}>
+                Name{" "}
+                {icon === true ? (
+                  <FontAwesomeIcon icon={faArrowDown} />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowUp} />
+                )}
+              </th>
               <th>Father Name</th>
               <th>Post</th>
               <th>Number</th>
@@ -180,6 +189,11 @@ const Tables = () => {
             </tr>
           </thead>
           <tbody>
+            {result !== "" && (
+              <tr className="result">
+                <td colSpan="5">{result}</td>
+              </tr>
+            )}
             {!loading &&
               currentEmployees.map((employe) => (
                 <tr key={employe.id}>

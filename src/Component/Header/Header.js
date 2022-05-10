@@ -2,6 +2,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 import "./Header.css";
 function Header() {
   const dispatch = useDispatch();
@@ -13,16 +16,21 @@ function Header() {
     navigate("/");
     dispatch({ type: "LOGOUT", payload: null });
   };
-const hemburgHanlder =(e)=>{
-  e.target.classList.toggle("change");
-}
+  const [menuToggle, setMenuToggle] = useState(true);
+
   return (
     <nav className="nav">
       <h3>Employee Entry App</h3>
       {state.userState === null ? (
         <>
-          <ul className="nav_auth_button ">
-            <li>
+          <ul
+            className={!menuToggle ? "nav_auth_button" : "nav_auth_button hide"}
+          >
+            <li
+              onClick={() => {
+                setMenuToggle((pre) => !pre);
+              }}
+            >
               <NavLink
                 className={(navData) =>
                   navData.isActive ? "active_link" : "link"
@@ -32,7 +40,11 @@ const hemburgHanlder =(e)=>{
                 Sign In
               </NavLink>
             </li>
-            <li>
+            <li
+              onClick={() => {
+                setMenuToggle((pre) => !pre);
+              }}
+            >
               <NavLink
                 className={(navData) =>
                   navData.isActive ? "active_link" : "link"
@@ -45,9 +57,15 @@ const hemburgHanlder =(e)=>{
           </ul>
         </>
       ) : (
-        <div className="nav_content ">
+        <div
+          className={!menuToggle ? "nav_auth_button" : "nav_auth_button hide"}
+        >
           <ul className="nav_button_container">
-            <li>
+            <li
+              onClick={() => {
+                setMenuToggle((pre) => !pre);
+              }}
+            >
               <NavLink
                 className={(navData) =>
                   navData.isActive ? "active_link" : "link"
@@ -57,14 +75,35 @@ const hemburgHanlder =(e)=>{
                 Employee List
               </NavLink>
             </li>
-            <li>
+            <li
+              onClick={() => {
+                setMenuToggle((pre) => !pre);
+              }}
+            >
               <span className="link" onClick={logOutHandler}>
                 Log Out
               </span>
             </li>
-         <li className="user_name">{state.userName}</li>
+            <li className="user_name">{state.userName}</li>
           </ul>
         </div>
+      )}
+      {menuToggle ? (
+        <FontAwesomeIcon
+          icon={faBars}
+          className="HemburgBars"
+          onClick={() => {
+            setMenuToggle((pre) => !pre);
+          }}
+        />
+      ) : (
+        <FontAwesomeIcon
+          icon={faClose}
+          className="HemburgBars"
+          onClick={() => {
+            setMenuToggle((pre) => !pre);
+          }}
+        />
       )}
     </nav>
   );

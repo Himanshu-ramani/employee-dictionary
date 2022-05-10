@@ -70,28 +70,42 @@
 .container{
     display: none;
 }
+.HemburgBars{
+   display: none;
+}
+.hide{
+    display: flex;
+}
 @media only screen and (max-width: 668px) {
-    .nav_content{
-    display: none;
-    }
-    .nav_content ul *{
-        margin: 0;
-    }
 
-    .menu {
-        display: flex;
-        flex-direction: row;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-      .menu > li {
-        margin: 0 1rem;
-        overflow: hidden;
-      }
-  /* .nav_auth_button{
-      display: none;
-  } */
-  /* hemburg */
- 
+    .HemburgBars{
+        height: 30px;
+        padding: 13px;
+        display: inline-block;
+    }
+  .nav ul {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 62px;
+      right: 0;
+      margin: 0;
+      height: 100vh;
+      justify-content: flex-start;
+      background-color: #fff;
+      padding: 0;
+  }
+  .nav ul  li,.nav ul  li a , .nav ul  li span{
+      color: black;
+      background-color: transparent;
+      text-align: center;
+  }
+  .nav ul  li{
+    border-top: 1px solid;
+     margin: 0;
+     padding: 10px;
+  }
+  .hide{
+      display: none !important;
+  }
 }

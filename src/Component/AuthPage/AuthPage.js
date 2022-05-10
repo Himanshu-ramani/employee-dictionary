@@ -167,8 +167,6 @@ function AuthPage() {
           dataInput.email,
           dataInput.password
         );
-        console.log(user.user.displayName);
-
         if (!user.user.emailVerified) {
           toast.error("verify your email");
           return;

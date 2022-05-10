@@ -100,6 +100,9 @@ td {
     display: inline;
     border: 0;
   }
+  .table{
+    margin-top: 5px;
+  }
   .table_nav_conatiner{
     display: flex;
   }
@@ -155,7 +158,9 @@ td {
   display: none !important;
 }
 }
-
+.result td{
+  text-align: center;
+}
 /* Rsponsieve */
 /* spinner */
 @keyframes spinner {

@@ -155,7 +155,7 @@ const Form = () => {
   };
 
   const update = async (e) => {
-    const userDoc = doc(db,  gState.userState, id);
+    const userDoc = doc(db, gState.userState, id);
     if (navigator.onLine) {
       setConnection(navigator.onLine);
       try {
@@ -201,26 +201,23 @@ const Form = () => {
   const formSubmitHandler = (e) => {
     e.preventDefault();
     validation();
-////
+    ////
 
-
-///
+    ///
     setConnection(navigator.onLine);
     if (Object.values(repeatNumber).includes(true)) {
       return;
     }
     for (const key in isValid) {
       if (formValue[key].trim() === "") {
-        return
+        return;
       }
-    
     }
-    if (id) { 
-      update()
-    }else{
-      upload()
+    if (id) {
+      update();
+    } else {
+      upload();
     }
-
   };
 
   //view modal
@@ -241,7 +238,7 @@ const Form = () => {
   };
   //spiner
 
-  const spinner = <div class="spinner"></div>
+  const spinner = <div className="spinner"></div>;
 
   return (
     <>
@@ -249,9 +246,8 @@ const Form = () => {
       <form onSubmit={formSubmitHandler} className="Form">
         {loading && spinner}
 
-        <div>
-          <Toaster position="top-center" reverseOrder={false} />
-        </div>
+        <Toaster position="top-center" />
+
         <h3>Personal Info</h3>
 
         <div className="name-Conatiner">
@@ -545,15 +541,19 @@ const Form = () => {
             )}
           </div>
         </div>
-          {viewModal && (
-            <UplaodModal
-              setviewModal={setviewModal}
-              modalDetail={modalDetail}
-              setFormValue={setFormValue}
-              formValue={formValue}
-            />
-          )}
-            {<button type='submit' disabled={loading}>{loading ? "Loading" :<>{id ? 'Update' : 'Submit'}</> }</button>}
+        {viewModal && (
+          <UplaodModal
+            setviewModal={setviewModal}
+            modalDetail={modalDetail}
+            setFormValue={setFormValue}
+            formValue={formValue}
+          />
+        )}
+        {
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading" : <>{id ? "Update" : "Submit"}</>}
+          </button>
+        }
       </form>
     </>
   );
