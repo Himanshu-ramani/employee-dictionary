@@ -76,5 +76,8 @@
    .photo_view{
       margin: auto;
    }
+   .Name_Container{
+      flex-direction:column;
+   }
 }
 
