@@ -1,4 +1,4 @@
-.Form{
+.Form {
     width: 50%;
     margin: auto;
     margin-top: 40px;
@@ -7,92 +7,107 @@
     padding: 20px;
 }
 
-.upload_button_container{
+.upload_button_container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
 }
+
 /* CSS */
 .button-16 {
-  background-color: #e7e7e7;
-  border: 1px solid #f8f9fa;
-  border-radius: 4px;
-  color: #3c4043;
-  cursor: pointer;
-  font-family: arial,sans-serif;
-  font-size: 14px;
-  height: 36px;
-  line-height: 27px;
-  min-width: 54px;
-  padding: 0 16px;
-  text-align: center;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: pre;
+    background-color: #e7e7e7;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    cursor: pointer;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    height: 36px;
+    line-height: 27px;
+    min-width: 54px;
+    padding: 0 16px;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: pre;
 }
 
 .button-16:hover {
-  border-color: #dadce0;
-  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
-  color: #202124;
+    border-color: #dadce0;
+    box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+    color: #202124;
 }
 
 .button-16:focus {
-  border-color: #4285f4;
-  outline: none;
+    border-color: #4285f4;
+    outline: none;
 }
-.Form h3{
+
+.Form h3 {
     margin: 10px;
 }
-.Form input{
-    padding:10px;
-  border-radius:5px;
+
+.Form input {
+    padding: 10px;
+    border-radius: 5px;
     border: 1px solid gray;
 }
-.suite{
+
+.suite {
     width: 552px;
     margin-bottom: 10px;
     margin-top: 10px;
 }
-.address input{
+
+.address input {
     margin-right: 10px;
 }
-.Name{
+
+.Name {
     margin-right: 10px;
 }
-.post{
+
+.post {
     margin-top: 10px;
     width: 352px;
 }
-.contact *{
-    margin-right:  10px;
+
+.contact * {
+    margin-right: 10px;
 }
+
 .contact {
-    display:  flex;
-    align-items:flex-start;
+    display: flex;
+    align-items: flex-start;
 }
-.input{
+
+.input {
     display: inline-block;
 }
-.personal{
+
+.personal {
     display: flex;
-    align-items:flex-start;
+    align-items: flex-start;
 }
-.invalid{
+
+.invalid {
     border: 1px solid red !important;
     background-color: rgba(255, 0, 0, 0.137) !important;
-    padding:10px;
-    border-radius:5px;
+    padding: 10px;
+    border-radius: 5px;
 }
-.Form p{
+
+.Form p {
     color: red;
 }
+
 .address_content {
     display: flex;
     align-items: flex-start;
 }
-.connection{
+
+.connection {
     position: sticky;
     top: 0;
     width: 100%;
@@ -100,65 +115,80 @@
     background: red;
     text-align: center;
 }
-@media only screen and (max-width: 1024px) {
-    
 
-    Form{
+@media only screen and (max-width: 1024px) {
+
+
+    Form {
         width: 70% !important;
     }
 }
 
 @media only screen and (max-width: 768px) {
 
-    Form{
+    Form {
         width: 80% !important;
     }
-    .name-Conatiner{
+
+    .name-Conatiner {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
     }
-    .Form input{
+
+    .Form input {
         width: 85% !important;
-        margin: 10px; 
+        margin: 10px;
     }
+
     .Form div {
-        width: 100% !important; 
-   
+        width: 100% !important;
+
     }
-    .upload_button_container,.personal,.contact,.address_content,.name-Conatiner{
-       flex-direction: column;
+
+    .upload_button_container,
+    .personal,
+    .contact,
+    .address_content,
+    .name-Conatiner {
+        flex-direction: column;
         justify-content: center;
         margin: auto;
     }
-    .upload_button_container div{
+
+    .upload_button_container div {
         display: inline;
     }
-.upload_button_container *{
-    width: 100% ;
-    margin: 3px;
-}
-    .Form p{
+
+    .upload_button_container * {
+        width: 100%;
+        margin: 3px;
+    }
+
+    .Form p {
         margin-left: 10px;
     }
 }
+
 /* spinner */
 @keyframes spinner {
-  to {transform: rotate(360deg);}
+    to {
+        transform: rotate(360deg);
+    }
 }
- 
+
 .spinner:before {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
-  border-radius: 50%;
-  border-top: 2px solid #07d;
-  border-right: 2px solid transparent;
-  animation: spinner .6s linear infinite;
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border-top: 2px solid #07d;
+    border-right: 2px solid transparent;
+    animation: spinner .6s linear infinite;
 }

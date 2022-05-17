@@ -32,6 +32,12 @@ function AuthPage() {
   });
   const [emailError, setEmailError] = useState(false);
   useEffect(() => {
+    setIsValid({
+      email: false,
+      password: false,
+      lastName: false,
+      firstName: false,
+    })
     if (userState === "SignUp") {
       setDataInput({ email: "", password: "", firstName: "", lastName: "" });
       setIsValid({

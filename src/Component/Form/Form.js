@@ -243,10 +243,9 @@ const Form = () => {
   return (
     <>
       {!connection && <NoConnection />}
+      <Toaster position="top-center" />
       <form onSubmit={formSubmitHandler} className="Form">
         {loading && spinner}
-
-        <Toaster position="top-center" />
 
         <h3>Personal Info</h3>
 

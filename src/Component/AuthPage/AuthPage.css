@@ -1,34 +1,32 @@
-
-
-.auth_form{
+.auth_form {
     width: 40%;
-    /* height: 70%;  */
+    margin: auto;
+    margin-top: 50px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     border-radius: 7px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-   
 }
-.auth_form h2{
+
+.auth_form h2 {
     text-align: center;
 }
-.auth_form input{
-  margin: 10px 0;
-  width: 70%;
-  padding: 6px;
+
+.auth_form input {
+    margin: 10px 0;
+    width: 70%;
+    padding: 6px;
 }
-.auth_error{
+
+.auth_error {
     color: red;
     margin: 0;
-   margin-bottom: 2px;
+    margin-bottom: 2px;
 }
-.auth_button{
+
+.auth_button {
     width: 74%;
     padding: 6px;
     color: #fff;
@@ -36,6 +34,7 @@
     border: 1px solid;
     border-radius: 4px;
 }
+
 .auth_button_google {
     width: 74%;
     padding: 6px;
@@ -44,14 +43,15 @@
     border-radius: 4px;
     margin-top: 10px;
 }
-.google_icon{
+
+.google_icon {
     height: 15px;
     margin: 0;
 }
-.note{
+
+.note {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-

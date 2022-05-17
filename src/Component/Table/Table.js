@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { db } from "../../Firebase/Firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -30,6 +30,7 @@ const Tables = () => {
   const [confirmWindow, setConfirmWindow] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteObjId, setDeleteObjId] = useState(null);
+  const [search , setSearch] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dataLoading = useContext(DataLoading);
@@ -38,7 +39,7 @@ const Tables = () => {
   }, [dataLoading]);
 
   //AllData
-
+  const serachRef = useRef()
   const state = useSelector((state) => state);
   useEffect(() => {
     setData(state.gobalData);
@@ -69,12 +70,16 @@ const Tables = () => {
   }, [deleteConfirm]);
 
   const searchHandler = (e) => {
-    if (e.target.value !== "") {
+    setSearch(e.target.value)
+    
+  };
+  useEffect(() => {
+    if (search !== "") {
       const searchData = state.gobalData.filter((employe) => {
         return Object.values(employe)
           .join("")
           .toLowerCase()
-          .includes(e.target.value.toLowerCase());
+          .includes(search.toLowerCase());
       });
       setData(searchData);
       setResult(searchData.length !== 0 ? "" : "No result Found");
@@ -83,7 +88,8 @@ const Tables = () => {
       setResult("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  };
+  }, [search])
+  
   //spiner
   const spinner = <div className="spinnerB"></div>;
   //sorting
@@ -145,13 +151,14 @@ const Tables = () => {
                   ) : (
                     <>
                       <FontAwesomeIcon icon={faSearch} />{" "}
-                      <input type="text" onChange={searchHandler} />
+                      <input type="text" onChange={searchHandler} value={search} />
                     </>
                   )}
                   <ul>
                     <li
                       onClick={() => {
                         setToggleSerach((pre) => !pre);
+                        setSearch('')
                       }}
                     >
                       {!toggleSearch ? (
