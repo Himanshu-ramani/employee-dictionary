@@ -40,6 +40,7 @@ function AuthPage() {
     });
     if (userState === "SignUp") {
       setDataInput({ email: "", password: "", firstName: "", lastName: "" });
+      setEmailError(false);
       setIsValid({
         email: false,
         password: false,
@@ -80,11 +81,12 @@ function AuthPage() {
       var pattern = new RegExp(
         /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
       );
-
-      if (!pattern.test(value)) {
-        setEmailError(true);
-      } else {
-        setEmailError(false);
+      if (value.trim() !== "") {
+        if (!pattern.test(value.trim())) {
+          setEmailError(true);
+        } else {
+          setEmailError(false);
+        }
       }
     }
   };
@@ -153,8 +155,7 @@ function AuthPage() {
       } catch (error) {
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
           setCustomeEmailError("Eamil already exist");
-        }
-        if (
+        } else if (
           error.message ===
           "Firebase: Password should be at least 6 characters (auth/weak-password)."
         ) {
