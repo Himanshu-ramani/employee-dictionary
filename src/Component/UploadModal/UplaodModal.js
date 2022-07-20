@@ -6,6 +6,10 @@ import idProfile from "../../Assest/id profile.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCameraAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
+import { storage } from "../../Firebase/Firebase";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const videoConstraints = {
   width: 200,
@@ -20,10 +24,33 @@ const UplaodModal = ({
   formValue,
 }) => {
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
   const webcamRef = React.useRef(null);
-
-  const capture = () => {
+  const num = 8;
+  const randomNameGenerator = (num) => {
+    let res = "";
+    for (let i = 0; i < num; i++) {
+      const random = Math.floor(Math.random() * 27);
+      res += String.fromCharCode(97 + random);
+    }
+    return res;
+  };
+  // console.log(randomNameGenerator(num));
+  const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
+    // store image in firebase storage
+    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
+    await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
+    await getDownloadURL(imageRef)
+      .then((url) => {
+        setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
+        toast.success("image uploaded Succesfully");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+
     setImage(imageSrc);
   };
   const [viewInput, setviewInput] = useState(false);
@@ -80,126 +107,153 @@ const UplaodModal = ({
   };
   const photoUploadHandler = async (e) => {
     const { files } = e.target;
-    console.log(files[0]);
+
     const base64 = await toBase64(files[0]);
-    setFormValue((pre) => ({ ...pre, [modalDetail]: base64 }));
+    setLoading(true);
+    // upload data url to storage
+    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
+    await uploadString(imageRef, base64, "data_url").then((snapshot) => {});
+    await getDownloadURL(imageRef)
+      .then((url) => {
+        console.log(url);
+        setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
+        toast.success("image uploaded Succesfully");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+    setLoading(false);
   };
 
   return (
-    <div>
-      <div className="Overlay"></div>{" "}
-      <section className="upload_modal_container">
-        <button
-          type="button"
-          className="modal_Cancel"
-          onClick={(e) => {
-            setviewModal(false);
-          }}
-        >
-          X
-        </button>
-        <h1>Upload {heading}</h1>
+    <>
+      {loading ? (
+        <div className="spinner"></div>
+      ) : (
+        <div>
+          <div className="Overlay"></div>{" "}
+          <section className="upload_modal_container">
+            <button
+              type="button"
+              className="modal_Cancel"
+              onClick={(e) => {
+                setviewModal(false);
+              }}
+            >
+              X
+            </button>
+            <h1>Upload {heading}</h1>
 
-        {!hideOption && (
-          <div className="Select_container">
-            <div>
-              <FontAwesomeIcon icon={faFileImage} />
-              <p className="heading_icon">Chose from Gallery</p>
-              <button type="button" className="button-16" onClick={viewGallary}>
-                Chose
-              </button>
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faCameraAlt} />
-              <p className="heading_icon">Take from Camrea</p>
-              <button type="button" className="button-16" onClick={viewCapute}>
-                Take
-              </button>
-            </div>
-          </div>
-        )}
-        {viewInput && (
-          <div>
-            <div className="gallary_conatiner">
-              <img
-                className="modal_profile_img"
-                alt="upload_image"
-                src={
-                  formValue[modalDetail] === ""
-                    ? profileImg
-                    : formValue[modalDetail]
-                }
-              />{" "}
-            </div>
-            <div>
-              {" "}
-              <button type="button" className="button-16">
-                {" "}
-                <label htmlFor="profile_Add">Add</label>
-              </button>
-            </div>
-
-            <input
-              type="file"
-              id="profile_Add"
-              onChange={photoUploadHandler}
-              accept="image/*"
-            />
-
-            <div>
-              <button type="button" className="button-16" onClick={back}>
-                Back
-              </button>{" "}
-            </div>
-          </div>
-        )}
-        {take && (
-          <div className="video">
-            {" "}
-            {image === "" ? (
-              <Webcam
-                audio={false}
-                height={200}
-                ref={webcamRef}
-                screenshotFormat="image/jpeg"
-                width={220}
-                videoConstraints={videoConstraints}
-              />
-            ) : (
-              <img src={image} alt="capture img" />
+            {!hideOption && (
+              <div className="Select_container">
+                <div>
+                  <FontAwesomeIcon icon={faFileImage} />
+                  <p className="heading_icon">Chose from Gallery</p>
+                  <button
+                    type="button"
+                    className="button-16"
+                    onClick={viewGallary}
+                  >
+                    Chose
+                  </button>
+                </div>
+                <div>
+                  <FontAwesomeIcon icon={faCameraAlt} />
+                  <p className="heading_icon">Take from Camera</p>
+                  <button
+                    type="button"
+                    className="button-16"
+                    onClick={viewCapute}
+                  >
+                    Take
+                  </button>
+                </div>
+              </div>
             )}
-            {image !== "" ? (
+            {viewInput && (
               <div>
-                <button
-                  className="button-16"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setImage("");
-                  }}
-                >
-                  Retake Image
-                </button>
-              </div>
-            ) : (
-              <div className="cam_button_container">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    capture();
-                  }}
-                  className="button-16"
-                >
-                  Capture
-                </button>{" "}
-                <button type="button" className="button-16" onClick={back}>
-                  back
-                </button>{" "}
+                <div className="gallary_conatiner">
+                  <img
+                    className="modal_profile_img"
+                    alt="upload_image"
+                    src={
+                      formValue[modalDetail] === ""
+                        ? profileImg
+                        : formValue[modalDetail]
+                    }
+                  />{" "}
+                </div>
+                <div>
+                  {" "}
+                  <button type="button" className="button-16">
+                    {" "}
+                    <label htmlFor="profile_Add">Add</label>
+                  </button>
+                </div>
+
+                <input
+                  type="file"
+                  id="profile_Add"
+                  onChange={photoUploadHandler}
+                  accept="image/*"
+                />
+
+                <div>
+                  <button type="button" className="button-16" onClick={back}>
+                    Back
+                  </button>{" "}
+                </div>
               </div>
             )}
-          </div>
-        )}
-      </section>
-    </div>
+            {take && (
+              <div className="video">
+                {" "}
+                {image === "" ? (
+                  <Webcam
+                    audio={false}
+                    height={200}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    width={220}
+                    videoConstraints={videoConstraints}
+                  />
+                ) : (
+                  <img src={image} alt="capture img" />
+                )}
+                {image !== "" ? (
+                  <div>
+                    <button
+                      className="button-16"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setImage("");
+                      }}
+                    >
+                      Retake Image
+                    </button>
+                  </div>
+                ) : (
+                  <div className="cam_button_container">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        capture();
+                      }}
+                      className="button-16"
+                    >
+                      Capture
+                    </button>{" "}
+                    <button type="button" className="button-16" onClick={back}>
+                      back
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 

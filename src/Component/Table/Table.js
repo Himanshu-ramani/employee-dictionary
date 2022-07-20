@@ -21,6 +21,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
 import NoConnection from "../NoConection/NoConnection";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
+import { deleteObject, ref } from "firebase/storage";
+import { storage } from "../../Firebase/Firebase";
 const Tables = () => {
   const [data, setData] = useState([]);
   const [loading, setloading] = useState(false);
@@ -30,7 +32,7 @@ const Tables = () => {
   const [confirmWindow, setConfirmWindow] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteObjId, setDeleteObjId] = useState(null);
-  const [search , setSearch] = useState('')
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dataLoading = useContext(DataLoading);
@@ -39,7 +41,7 @@ const Tables = () => {
   }, [dataLoading]);
 
   //AllData
-  const serachRef = useRef()
+  const serachRef = useRef();
   const state = useSelector((state) => state);
   useEffect(() => {
     setData(state.gobalData);
@@ -52,12 +54,20 @@ const Tables = () => {
   useEffect(async () => {
     if (deleteConfirm) {
       setloading(true);
-      const employeDoc = doc(db, state.userState, deleteObjId);
+      const employeDoc = doc(db, state.userState, deleteObjId.id);
+      const photoRef = ref(storage, deleteObjId.photo);
+      const adharRef = ref(storage, deleteObjId.adharCard);
+      const panRef = ref(storage, deleteObjId.panCard);
       try {
         await deleteDoc(employeDoc);
         const newArray = state.gobalData.filter((ele) => {
-          return ele.id !== deleteObjId;
+          return ele.id !== deleteObjId.id;
         });
+        // delete the file
+        await deleteObject(photoRef);
+        await deleteObject(adharRef);
+        await deleteObject(panRef);
+
         setloading(false);
         dispatch({ type: "DELETE", payload: newArray });
         toast.success("Successfully delete!");
@@ -70,8 +80,7 @@ const Tables = () => {
   }, [deleteConfirm]);
 
   const searchHandler = (e) => {
-    setSearch(e.target.value)
-    
+    setSearch(e.target.value);
   };
   useEffect(() => {
     if (search !== "") {
@@ -88,8 +97,8 @@ const Tables = () => {
       setResult("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
-  
+  }, [search]);
+
   //spiner
   const spinner = <div className="spinnerB"></div>;
   //sorting
@@ -151,14 +160,18 @@ const Tables = () => {
                   ) : (
                     <>
                       <FontAwesomeIcon icon={faSearch} />{" "}
-                      <input type="text" onChange={searchHandler} value={search} />
+                      <input
+                        type="text"
+                        onChange={searchHandler}
+                        value={search}
+                      />
                     </>
                   )}
                   <ul>
                     <li
                       onClick={() => {
                         setToggleSerach((pre) => !pre);
-                        setSearch('')
+                        setSearch("");
                       }}
                     >
                       {!toggleSearch ? (
@@ -217,7 +230,7 @@ const Tables = () => {
                       <button
                         className="button-38"
                         onClick={() => {
-                          deleteEmployee(employe.id);
+                          deleteEmployee(employe);
                         }}
                       >
                         <FontAwesomeIcon icon={faTrash} />

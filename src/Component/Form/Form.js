@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Form.css";
-import { db } from "../../Firebase/Firebase";
+import { db, storage } from "../../Firebase/Firebase";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,6 +8,8 @@ import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
 import UplaodModal from "../UploadModal/UplaodModal";
 import NoConnection from "../NoConection/NoConnection";
 import { useSelector, useDispatch } from "react-redux";
+import { deleteObject } from "firebase/storage";
+import { ref } from "firebase/storage";
 // local storage
 
 const Form = () => {
@@ -243,10 +245,8 @@ const Form = () => {
   return (
     <>
       {!connection && <NoConnection />}
-      <Toaster position="top-center" />
+      {loading && spinner}
       <form onSubmit={formSubmitHandler} className="Form">
-        {loading && spinner}
-
         <h3>Personal Info</h3>
 
         <div className="name-Conatiner">
@@ -554,6 +554,7 @@ const Form = () => {
           </button>
         }
       </form>
+      <Toaster position="top-center" />
     </>
   );
 };

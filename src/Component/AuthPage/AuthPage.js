@@ -37,7 +37,7 @@ function AuthPage() {
       password: false,
       lastName: false,
       firstName: false,
-    })
+    });
     if (userState === "SignUp") {
       setDataInput({ email: "", password: "", firstName: "", lastName: "" });
       setIsValid({
@@ -62,6 +62,11 @@ function AuthPage() {
   const inputChangeHandler = (e) => {
     const { name, value } = e.target;
     setDataInput((pre) => ({ ...pre, [name]: value }));
+    if (value.trim() === "") {
+      setIsValid((pre) => ({ ...pre, [name]: true }));
+    } else {
+      setIsValid((pre) => ({ ...pre, [name]: false }));
+    }
   };
 
   const inputBlurHanlder = (e) => {
@@ -99,7 +104,7 @@ function AuthPage() {
       type: "SIGNUP",
       payload: result._tokenResponse.localId,
     });
-    document.cookie = result._tokenResponse.localId;
+
     dispatch({
       type: "GET_USER",
       payload: result.user.displayName,
@@ -185,7 +190,7 @@ function AuthPage() {
           type: "GET_USER",
           payload: user.user.displayName,
         });
-        document.cookie = user._tokenResponse.localId;
+
         setLoading(false);
         setTimeout(() => {
           navigate("/Employee-list");
@@ -202,6 +207,10 @@ function AuthPage() {
       }
     }
   };
+  // const user = auth.currentUser.uid;
+  // if (user !== null) {
+  //   console.log(user);
+  // }
 
   return (
     <>

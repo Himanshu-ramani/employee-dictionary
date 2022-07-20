@@ -1,42 +1,45 @@
-import { createStore,combineReducers} from "redux";
+import { createStore, combineReducers } from "redux";
 
-const gobalData =(state= [],action) =>{
-  if (action.type === 'API_CALL') {
-    return(state = action.payload)
+const gobalData = (state = [], action) => {
+  if (action.type === "API_CALL") {
+    return (state = action.payload);
   }
-  if(action.type === 'ADD'){
-    return(state = action.payload)
+  if (action.type === "ADD") {
+    return (state = action.payload);
   }
-  if(action.type === 'DELETE'){
-    return(state = action.payload)
+  if (action.type === "DELETE") {
+    return (state = action.payload);
   }
-  if(action.type === 'UPDATE'){
-    return(state = action.payload)
+  if (action.type === "UPDATE") {
+    return (state = action.payload);
   }
   return state;
-}
-const userName =(state = '' , action)=>{
-  if (action.type ==='GET_USER') {
-    return state = action.payload
+};
+const userName = (state = "", action) => {
+  if (action.type === "GET_USER") {
+    return (state = action.payload);
   }
 
-  return state
-}
-  
-  const userState = (state =  document.cookie ||null ,action)=>{
-    if (action.type === 'SIGNUP') {
-      return( state = action.payload)
+  return state;
+};
+
+const userState = (state = null, action) => {
+  if (action.type === "REFRESH") {
+    return (state = action.payload);
   }
-  if (action.type === 'LOGIN') {
-    return( state = action.payload)
-}
-if (action.type === 'LOGOUT') {
-  return( state = action.payload)
-}
-  
-  return state
+  if (action.type === "SIGNUP") {
+    return (state = action.payload);
+  }
+  if (action.type === "LOGIN") {
+    return (state = action.payload);
+  }
+  if (action.type === "LOGOUT") {
+    return (state = action.payload);
   }
 
-  const store = createStore(combineReducers({gobalData,userState,userName}))
+  return state;
+};
 
-export default store
+const store = createStore(combineReducers({ gobalData, userState, userName }));
+
+export default store;

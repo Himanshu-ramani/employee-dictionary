@@ -11,12 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 /* spinner */
 @keyframes spinner {
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
- 
-.spinnerB:before {
+
+.spinner:before {
   content: '';
   box-sizing: border-box;
   position: absolute;
