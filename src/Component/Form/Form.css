@@ -168,6 +168,11 @@
     .Form p {
         margin-left: 10px;
     }
+
+    .loading {
+        width: 2em !important;
+
+    }
 }
 
 /* spinner */

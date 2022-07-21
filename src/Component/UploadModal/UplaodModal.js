@@ -128,7 +128,7 @@ const UplaodModal = ({
         <div className="Overlay"></div>
         <section className="upload_modal_container">
           {loading ? (
-            <div className="loading">Loading&#8230;</div>
+            <main className="loading">Loading&#8230;</main>
           ) : (
             <>
               <button

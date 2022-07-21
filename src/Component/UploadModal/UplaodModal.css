@@ -20,7 +20,7 @@
 
 .modal_profile_img {
     margin: auto;
-    width: 30%;
+    width: 50%;
 
 }
 
@@ -101,5 +101,9 @@ h1 {
         right: -122px;
     }
 
+    .loading {
+        width: 2em !important;
+
+    }
 
 }

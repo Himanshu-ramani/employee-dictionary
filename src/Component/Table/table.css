@@ -93,17 +93,26 @@ td {
   justify-content: space-between;
 }
 
+@media screen and (max-width: 768px) {
+  .td_button_container {
+    width: 100%;
+  }
+}
+
 /* spinner */
 @media screen and (max-width: 600px) {
+
 
   .resposive_table {
     display: inline;
     border: 0;
   }
-  .table{
+
+  .table {
     margin-top: 5px;
   }
-  .table_nav_conatiner{
+
+  .table_nav_conatiner {
     display: flex;
   }
 
@@ -128,10 +137,7 @@ td {
   }
 
   .table td::before {
-    /*
-     * aria-label has no advantage, it won't be read inside a table
-     content: attr(aria-label);
-     */
+
     content: attr(data-label);
     float: left;
     font-weight: bold;
@@ -147,20 +153,24 @@ td {
     align-items: center;
   }
 
-  
-.last{
-  display: flex !important;
+
+  .last {
+    display: flex !important;
     justify-content: space-between;
     align-items: center;
-}
+
+  }
+
   /* table nav */
-.thead{
-  display: none !important;
+  .thead {
+    display: none !important;
+  }
 }
-}
-.result td{
+
+.result td {
   text-align: center;
 }
+
 /* Rsponsieve */
 /* spinner */
 @keyframes spinner {

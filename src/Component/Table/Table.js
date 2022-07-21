@@ -39,7 +39,10 @@ const Tables = () => {
   useEffect(() => {
     setloading(dataLoading);
   }, [dataLoading]);
-  setConnection(navigator.onLine);
+  useEffect(() => {
+    setConnection(navigator.onLine);
+  }, [connection]);
+
   //AllData
 
   const state = useSelector((state) => state);
