@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./Form.css";
 import { db } from "../../Firebase/Firebase";
 import toast from "react-hot-toast";
@@ -8,12 +8,33 @@ import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
 import UplaodModal from "../UploadModal/UplaodModal";
 import NoConnection from "../NoConection/NoConnection";
 import { useSelector, useDispatch } from "react-redux";
-import { storage } from "../../Firebase/Firebase";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+
 // local storage
 
 const Form = () => {
   const navigate = useNavigate();
+  const randomNameGenerator = () => {
+    let res = "";
+    for (let i = 0; i < 8; i++) {
+      const random = Math.floor(Math.random() * 27);
+      res += String.fromCharCode(97 + random);
+    }
+    return res;
+  };
+  // image name set
+  const photo = useMemo(() => {
+    return randomNameGenerator();
+  }, []);
+  const adharCard = useMemo(() => {
+    return randomNameGenerator();
+  }, []);
+  const panCard = useMemo(() => {
+    return randomNameGenerator();
+  }, []);
+
+  const [imageName, setImageName] = useState("");
+
+  ////
   const { id } = useParams();
   const [state] = useState({
     firstName: "",
@@ -152,33 +173,16 @@ const Form = () => {
           setRepeatNumber((pre) => ({ ...pre, [name]: false }));
           setIsValid({ ...isValid, [name]: false });
         }
+      } else {
+        setRepeatNumber((pre) => ({
+          tempPhoneNumber: false,
+          permanentPhoneNumber: false,
+          nativePhoneNumber: false,
+        }));
       }
     }
   };
 
-  // random name genretor
-  const num = 8;
-  const randomNameGenerator = (num) => {
-    let res = "";
-    for (let i = 0; i < num; i++) {
-      const random = Math.floor(Math.random() * 27);
-      res += String.fromCharCode(97 + random);
-    }
-    return res;
-  };
-  // function upload image
-  const uploadimage = async (imageSrc, imageName) => {
-    // // store image in firebase storage
-    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
-    await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
-    await getDownloadURL(imageRef)
-      .then((url) => {
-        setFormValue((pre) => ({ ...pre, [imageName]: url }));
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-  };
   const update = async (e) => {
     const userDoc = doc(db, gState.userState, id);
     if (navigator.onLine) {
@@ -206,15 +210,6 @@ const Form = () => {
   const upload = async () => {
     try {
       setloading(true);
-      // // upload img
-      // // 1 ) photo
-      // await uploadimage(formValue.photo, "photo");
-      // // 2 ) adhar card
-      // await uploadimage(formValue.adharCard, "adharCard");
-      // // 3 ) panCard
-      // await uploadimage(formValue.panCard, "panCard");
-
-      // console.log(formValue);
 
       const doc = await addDoc(userCollectionRef, formValue);
       dispatch({
@@ -262,19 +257,22 @@ const Form = () => {
   const photoModalHandler = () => {
     setviewModal(true);
     setModalDetail("photo");
+    setImageName(photo);
   };
   const adharModalHandler = () => {
     setviewModal(true);
     setModalDetail("adharCard");
+    setImageName(adharCard);
   };
   const panModalHandler = () => {
     setviewModal(true);
     setModalDetail("panCard");
+    setImageName(panCard);
   };
 
   //spiner
 
-  const spinner = <div className="spinner"></div>;
+  const spinner = <div className="loading"></div>;
 
   return (
     <>
@@ -577,6 +575,7 @@ const Form = () => {
         {viewModal && (
           <UplaodModal
             setviewModal={setviewModal}
+            imageName={imageName}
             modalDetail={modalDetail}
             setFormValue={setFormValue}
             formValue={formValue}
