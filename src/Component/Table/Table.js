@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { db } from "../../Firebase/Firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -39,9 +39,9 @@ const Tables = () => {
   useEffect(() => {
     setloading(dataLoading);
   }, [dataLoading]);
-
+  setConnection(navigator.onLine);
   //AllData
-  const serachRef = useRef();
+
   const state = useSelector((state) => state);
   useEffect(() => {
     setData(state.gobalData);
@@ -51,31 +51,35 @@ const Tables = () => {
     setDeleteObjId(id);
     setConfirmWindow(true);
   };
-  useEffect(async () => {
-    if (deleteConfirm) {
-      setloading(true);
-      const employeDoc = doc(db, state.userState, deleteObjId.id);
-      const photoRef = ref(storage, deleteObjId.photo);
-      const adharRef = ref(storage, deleteObjId.adharCard);
-      const panRef = ref(storage, deleteObjId.panCard);
-      try {
-        await deleteDoc(employeDoc);
-        const newArray = state.gobalData.filter((ele) => {
-          return ele.id !== deleteObjId.id;
-        });
-        // delete the file
-        await deleteObject(photoRef);
-        await deleteObject(adharRef);
-        await deleteObject(panRef);
+  useEffect(() => {
+    async function deleteObj() {
+      if (deleteConfirm) {
+        setloading(true);
+        const employeDoc = doc(db, state.userState, deleteObjId.id);
+        const photoRef = ref(storage, deleteObjId.photo);
+        const adharRef = ref(storage, deleteObjId.adharCard);
+        const panRef = ref(storage, deleteObjId.panCard);
+        try {
+          await deleteDoc(employeDoc);
+          const newArray = state.gobalData.filter((ele) => {
+            return ele.id !== deleteObjId.id;
+          });
+          // delete the file
+          await deleteObject(photoRef);
+          await deleteObject(adharRef);
+          await deleteObject(panRef);
 
-        setloading(false);
-        dispatch({ type: "DELETE", payload: newArray });
-        toast.success("Successfully delete!");
-        setDeleteObjId(null);
-      } catch (error) {
-        toast.error(error.message);
+          setloading(false);
+          dispatch({ type: "DELETE", payload: newArray });
+          toast.success("Successfully delete!");
+          setDeleteObjId(null);
+          setDeleteConfirm(false);
+        } catch (error) {
+          toast.error(error.message);
+        }
       }
     }
+    deleteObj();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteConfirm]);
 

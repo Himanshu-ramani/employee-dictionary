@@ -8,6 +8,8 @@ import { faCameraAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
 import { storage } from "../../Firebase/Firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { useParams } from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 const videoConstraints = {
@@ -23,6 +25,8 @@ const UplaodModal = ({
   formValue,
   imageName,
 }) => {
+  const { id } = useParams();
+
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const webcamRef = React.useRef(null);
@@ -31,7 +35,10 @@ const UplaodModal = ({
     const imageSrc = webcamRef.current.getScreenshot();
     setLoading(true);
     // store image in firebase storage
-    const imageRef = ref(storage, `${imageName}`);
+
+    const imageRef = id
+      ? ref(storage, formValue[modalDetail])
+      : ref(storage, `${imageName}`);
     await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
     await getDownloadURL(imageRef)
       .then((url) => {
@@ -65,10 +72,6 @@ const UplaodModal = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDetail]);
-  useEffect(() => {
-    setFormValue({ ...formValue, [modalDetail]: image });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image]);
 
   const viewGallary = () => {
     setviewInput(true);
@@ -103,11 +106,13 @@ const UplaodModal = ({
     const base64 = await toBase64(files[0]);
     setLoading(true);
     // upload data url to storage
-    const imageRef = ref(storage, `${imageName}`);
+
+    const imageRef = id
+      ? ref(storage, formValue[modalDetail])
+      : ref(storage, `${imageName}`);
     await uploadString(imageRef, base64, "data_url").then((snapshot) => {});
     await getDownloadURL(imageRef)
       .then((url) => {
-        console.log(url);
         setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
         toast.success("image uploaded Succesfully");
       })
@@ -123,7 +128,7 @@ const UplaodModal = ({
         <div className="Overlay"></div>
         <section className="upload_modal_container">
           {loading ? (
-            <div className="spinnerB"></div>
+            <div className="loading">Loading&#8230;</div>
           ) : (
             <>
               <button

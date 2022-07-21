@@ -272,7 +272,7 @@ const Form = () => {
 
   //spiner
 
-  const spinner = <div className="loading"></div>;
+  const spinner = <div className="loading">Loading&#8230;</div>;
 
   return (
     <>
