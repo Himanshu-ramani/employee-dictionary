@@ -68,6 +68,9 @@ function AuthPage() {
     } else {
       setIsValid((pre) => ({ ...pre, [name]: false }));
     }
+    setCustomeEmailError("");
+    setCustomePasswordError("");
+    setEmailError(false);
   };
 
   const inputBlurHanlder = (e) => {
@@ -143,7 +146,6 @@ function AuthPage() {
         await updateProfile(auth.currentUser, {
           displayName: dataInput.firstName + " " + dataInput.lastName,
         });
-        console.log(auth.currentUser);
         await sendEmailVerification(auth.currentUser).then(() => {});
         setLoading(false);
 
@@ -199,6 +201,8 @@ function AuthPage() {
       } catch (error) {
         if (error.message === "Firebase: Error (auth/wrong-password).") {
           setCustomePasswordError("Wrong Password");
+        } else if (error.message === "Firebase: Error (auth/user-not-found).") {
+          setCustomeEmailError("User not found.");
         } else {
           //
           toast.error(error.message);
@@ -297,7 +301,7 @@ function AuthPage() {
               className="auth_button_google"
               type="Button"
             >
-              Sigin with google{" "}
+              Sign in with google{" "}
               <img src={google} alt="" className="google_icon" />{" "}
             </button>
             {userState === "login" && (

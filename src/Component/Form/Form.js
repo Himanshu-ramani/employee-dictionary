@@ -8,7 +8,8 @@ import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
 import UplaodModal from "../UploadModal/UplaodModal";
 import NoConnection from "../NoConection/NoConnection";
 import { useSelector, useDispatch } from "react-redux";
-
+import { storage } from "../../Firebase/Firebase";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 // local storage
 
 const Form = () => {
@@ -155,6 +156,29 @@ const Form = () => {
     }
   };
 
+  // random name genretor
+  const num = 8;
+  const randomNameGenerator = (num) => {
+    let res = "";
+    for (let i = 0; i < num; i++) {
+      const random = Math.floor(Math.random() * 27);
+      res += String.fromCharCode(97 + random);
+    }
+    return res;
+  };
+  // function upload image
+  const uploadimage = async (imageSrc, imageName) => {
+    // // store image in firebase storage
+    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
+    await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
+    await getDownloadURL(imageRef)
+      .then((url) => {
+        setFormValue((pre) => ({ ...pre, [imageName]: url }));
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
   const update = async (e) => {
     const userDoc = doc(db, gState.userState, id);
     if (navigator.onLine) {
@@ -182,6 +206,16 @@ const Form = () => {
   const upload = async () => {
     try {
       setloading(true);
+      // // upload img
+      // // 1 ) photo
+      // await uploadimage(formValue.photo, "photo");
+      // // 2 ) adhar card
+      // await uploadimage(formValue.adharCard, "adharCard");
+      // // 3 ) panCard
+      // await uploadimage(formValue.panCard, "panCard");
+
+      // console.log(formValue);
+
       const doc = await addDoc(userCollectionRef, formValue);
       dispatch({
         type: "ADD",

@@ -11,7 +11,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import toast from "react-hot-toast";
 
 const videoConstraints = {
-  width: 200,
+  width: 350,
   height: 200,
   facingMode: "user",
 };
@@ -37,21 +37,23 @@ const UplaodModal = ({
   // console.log(randomNameGenerator(num));
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setLoading(true);
-    // store image in firebase storage
-    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
-    await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
-    await getDownloadURL(imageRef)
-      .then((url) => {
-        setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
-        setImage(url);
-        toast.success("image uploaded Succesfully");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-    setLoading(false);
-    // setImage(imageSrc);
+    setImage(imageSrc);
+    setFormValue((pre) => ({ ...pre, [modalDetail]: imageSrc }));
+    // setLoading(true);
+    // // store image in firebase storage
+    // const imageRef = ref(storage, `${randomNameGenerator(num)}`);
+    // await uploadString(imageRef, imageSrc, "data_url").then((snapshot) => {});
+    // await getDownloadURL(imageRef)
+    //   .then((url) => {
+    //     setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
+    //     setImage(url);
+    //     toast.success("image uploaded Succesfully");
+    //   })
+    //   .catch((error) => {
+    //     toast.error(error.message);
+    //   });
+    // setLoading(false);
+    // // setImage(imageSrc);
   };
   const [viewInput, setviewInput] = useState(false);
   const [profileImg, setProfileImg] = useState(null);
@@ -109,20 +111,19 @@ const UplaodModal = ({
     const { files } = e.target;
 
     const base64 = await toBase64(files[0]);
-    setLoading(true);
-    // upload data url to storage
-    const imageRef = ref(storage, `${randomNameGenerator(num)}`);
-    await uploadString(imageRef, base64, "data_url").then((snapshot) => {});
-    await getDownloadURL(imageRef)
-      .then((url) => {
-        console.log(url);
-        setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
-        toast.success("image uploaded Succesfully");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-    setLoading(false);
+    setFormValue((pre) => ({ ...pre, [modalDetail]: base64 }));
+    ///// // upload data url to storage
+    // const imageRef = ref(storage, `${randomNameGenerator(num)}`);
+    // await uploadString(imageRef, base64, "data_url").then((snapshot) => {});
+    // await getDownloadURL(imageRef)
+    //   .then((url) => {
+    //     console.log(url);
+    //     setFormValue((pre) => ({ ...pre, [modalDetail]: url }));
+    //     toast.success("image uploaded Succesfully");
+    //   })
+    //   .catch((error) => {
+    //     toast.error(error.message);
+    //   });
   };
 
   return (
