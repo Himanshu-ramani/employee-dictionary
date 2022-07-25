@@ -13,9 +13,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import LoginPage from "./Pages/LoginPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import LoginVerification from "./Pages/LoginVerification";
+// import { useLocation } from "react-router-dom";
+
 export const DataLoading = React.createContext(false);
 function App() {
   const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -39,18 +42,13 @@ function App() {
       }
     })();
 
-    if (state.userState === null) {
-      if (pathname !== "/Authentication/login") {
-        navigate("/");
-      }
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (state.userState !== null) {
       fetchData();
-      navigate("/Employee-list");
+      navigate(pathname === "/" ? "/Employee-list" : pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userState]);
